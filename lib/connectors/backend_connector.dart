@@ -1,0 +1,7 @@
+
+class BackendConnector {
+
+
+  String baseUrl = '';
+
+}
