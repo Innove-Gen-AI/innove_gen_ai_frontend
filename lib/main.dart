@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'views/home.dart';
 
 void main() {
@@ -10,17 +11,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = ThemeData(
+      scaffoldBackgroundColor: Colors.transparent,
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.deepPurple[200],
-        colorScheme: const ColorScheme.dark(),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.deepPurple
-        )
+      theme: theme.copyWith(
+        textTheme: theme.textTheme.copyWith(
+          headlineLarge: theme.textTheme.headlineLarge!.copyWith(
+              color: Colors.blue.shade400, fontWeight: FontWeight.w700),
+        ),
       ),
-      home: const Home(title: 'Gen AI Hackathon Project'),
+      home: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.blue.shade300,
+              Colors.white,
+              Colors.deepPurple.shade300
+            ],
+          )),
+          child: const SafeArea(child: Home())),
     );
   }
 }
