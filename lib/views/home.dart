@@ -12,30 +12,61 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          const Expanded(
-            // TODO reformat the textfield t olook nicer
-            child: TextField(),
+          const SizedBox(
+            height: 60,
           ),
+
+          //Search field
+          Container(
+            margin: const EdgeInsets.only(bottom: 138),
+            padding: const EdgeInsets.only(left: 56),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: const [
+                  BoxShadow(
+                      offset: Offset(0, 4),
+                      color: Colors.black26,
+                      blurRadius: 2)
+                ]),
+            child: const TextField(
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search anything...',
+                suffixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ),
+
+          //Rich text content
           Expanded(
-            child: RichText(
-              text: TextSpan(
+            flex: 2,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: RichText(
+                text: TextSpan(
                   text: 'Discover the power of ',
                   style: Theme.of(context).textTheme.headlineLarge,
                   children: [
                     TextSpan(
                       text: 'relevant reviews',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.w800),
-                    )
-                  ]),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
+
+          //Empty container for spacing
           Expanded(child: Container())
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
