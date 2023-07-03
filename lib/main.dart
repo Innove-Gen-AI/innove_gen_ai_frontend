@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-        child: const SafeArea(child: ProductSummary()),
+        child: const SafeArea(child: Home()),
       ),
     );
   }
