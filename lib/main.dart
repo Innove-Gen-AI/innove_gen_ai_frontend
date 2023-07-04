@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:innove_gen_ai_frontend/views/login_view.dart';
 import 'package:innove_gen_ai_frontend/views/product_review_summary_view.dart';
 
 import 'views/home.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
             ],
           ),
         ),
-        child: const SafeArea(child: Home()),
+        child: const SafeArea(child: Login()),
       ),
     );
   }
