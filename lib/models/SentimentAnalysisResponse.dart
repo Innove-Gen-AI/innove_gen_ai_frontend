@@ -1,27 +1,13 @@
 class Prediction {
   List<String> content;
-  CitationMetadata citationMetadata;
   SafetyAttributes safetyAttributes;
 
-  Prediction({required this.content, required this.citationMetadata, required this.safetyAttributes});
+  Prediction({required this.content, required this.safetyAttributes});
 
   factory Prediction.fromJson(Map<String, dynamic> json) {
     return Prediction(
       content: List<String>.from(json['content']),
-      citationMetadata: CitationMetadata.fromJson(json['citationMetadata']),
       safetyAttributes: SafetyAttributes.fromJson(json['safetyAttributes']),
-    );
-  }
-}
-
-class CitationMetadata {
-  List<dynamic> citations;
-
-  CitationMetadata({required this.citations});
-
-  factory CitationMetadata.fromJson(Map<String, dynamic> json) {
-    return CitationMetadata(
-      citations: List<dynamic>.from(json['citations']),
     );
   }
 }
