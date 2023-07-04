@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
 import 'package:innove_gen_ai_frontend/views/home.dart';
 
+import 'login_view.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
       (value) => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => withScreenDecoration(const Home()),
+          builder: (context) => withScreenDecoration(const Login()),
         ),
       ),
     );

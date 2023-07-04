@@ -24,15 +24,15 @@ class MyApp extends StatelessWidget with DecorationUtil {
       scaffoldBackgroundColor: Colors.transparent,
     );
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: theme.copyWith(
-        textTheme: theme.textTheme.copyWith(
-          headlineMedium: prettifyText(theme.textTheme.headlineLarge!),
-          headlineLarge: prettifyText(theme.textTheme.headlineLarge!),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: theme.copyWith(
+          textTheme: theme.textTheme.copyWith(
+            headlineMedium: prettifyText(theme.textTheme.headlineLarge!),
+            headlineLarge: prettifyText(theme.textTheme.headlineLarge!),
+          ),
         ),
-      ),
-      home: withScreenDecoration(const SplashScreen())
+        home: withScreenDecoration(const SplashScreen())
     );
   }
 
