@@ -48,14 +48,20 @@ class _LoginState extends State<Login> {
                         Positioned(
                           left: 200,
                           top: 340,
-                          child: Container(
-                            width: 144,
-                            height: 60,
-                            decoration: ShapeDecoration(
-                              color: Color(0x002F80ED),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.50, color: Color(0xFF2F80ED)),
-                                borderRadius: BorderRadius.circular(7),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print("button click");
+                              },
+                            child: Container(
+                              width: 144,
+                              height: 60,
+                              decoration: ShapeDecoration(
+                                color: Color(0x002F80ED),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 0.50, color: Color(0xFF2F80ED)),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
                               ),
                             ),
                           ),
@@ -198,6 +204,25 @@ class _LoginState extends State<Login> {
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
+                            ),
+                          ),
+                        ),
+                        //Password input box
+                        Positioned(
+                          left: 19,
+                          top: 174,
+                          child: Container(
+                            width: 280,
+                            height: 40,
+                            child: TextField(
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                color: Colors.blueAccent,
+                              ),
+                              controller: _controller,
                             ),
                           ),
                         ),
