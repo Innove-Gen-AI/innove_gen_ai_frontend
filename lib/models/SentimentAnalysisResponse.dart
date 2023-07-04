@@ -1,12 +1,12 @@
 class Prediction {
-  List<String> content;
+  String content;
   SafetyAttributes safetyAttributes;
 
   Prediction({required this.content, required this.safetyAttributes});
 
   factory Prediction.fromJson(Map<String, dynamic> json) {
     return Prediction(
-      content: List<String>.from(json['content']),
+      content: json['content'],
       safetyAttributes: SafetyAttributes.fromJson(json['safetyAttributes']),
     );
   }

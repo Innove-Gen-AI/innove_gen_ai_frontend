@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
       (value) => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => withScreenDecoration(const Login()),
+          builder: (context) => withScreenDecoration(const Home()),
         ),
       ),
     );

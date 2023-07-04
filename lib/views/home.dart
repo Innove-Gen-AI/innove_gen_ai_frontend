@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
+import 'package:innove_gen_ai_frontend/connectors/backend_connector.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController _controller = TextEditingController();
 
-
+  BackendConnector backendConnector = BackendConnector();
   // replace with call to backend or directly to db to fetch product from list
   void _fetchSuggestions() {
     print('Text field search: ${_controller.text}');
@@ -36,6 +37,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _controller.addListener(_fetchSuggestions);
+    backendConnector.callProducts("");
   }
 
   @override
@@ -43,6 +45,7 @@ class _HomeState extends State<Home> {
     _controller.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

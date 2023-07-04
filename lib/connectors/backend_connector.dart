@@ -23,6 +23,7 @@ class BackendConnector {
 
 
     if (response.statusCode == 200) {
+      print(response.body);
       return Prediction.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
@@ -38,6 +39,7 @@ class BackendConnector {
     final response = await http.get(uri, headers: headers);
 
     if(response.statusCode == 200) {
+      print(response.body);
       final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((json) => Product.fromJson(json)).toList();
     } else {
