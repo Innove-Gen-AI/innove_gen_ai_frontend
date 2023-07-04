@@ -1,12 +1,16 @@
-
 import 'package:flutter/material.dart';
+import 'package:innove_gen_ai_frontend/user_info.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
-import 'package:innove_gen_ai_frontend/views/home.dart';
-import 'package:innove_gen_ai_frontend/views/product_review_summary_view.dart';
 import 'package:innove_gen_ai_frontend/views/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserInfo(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget with DecorationUtil {
@@ -32,8 +36,6 @@ class MyApp extends StatelessWidget with DecorationUtil {
             headlineLarge: prettifyText(theme.textTheme.headlineLarge!),
           ),
         ),
-        home: withScreenDecoration(const SplashScreen())
-    );
+        home: withScreenDecoration(const SplashScreen()));
   }
-
 }
