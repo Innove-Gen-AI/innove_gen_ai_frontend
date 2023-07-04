@@ -5,7 +5,6 @@ class UserInfo extends ChangeNotifier {
 
   late String _passValue;
   
-  
   String get getAuthValue => _passValue;
 
   void updatePassValue(String value) {
