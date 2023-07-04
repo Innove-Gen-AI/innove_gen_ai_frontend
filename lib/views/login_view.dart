@@ -1,7 +1,11 @@
 // ignore_for_file: unnecessary_const
 
 import 'package:flutter/material.dart';
-import 'package:easy_autocomplete/easy_autocomplete.dart';
+import 'package:innove_gen_ai_frontend/models/user_info.dart';
+import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
+import 'package:provider/provider.dart';
+
+import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,8 +14,10 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with DecorationUtil {
   final TextEditingController _controller = TextEditingController();
+
+  late String passValue;
 
   @override
   void initState() {
@@ -41,42 +47,52 @@ class _LoginState extends State<Login> {
                   top: 293,
                   child: Container(
                     width: 360,
-                    height: 400,
+                    height: 450,
                     child: Stack(
                       children: [
-                        //Login Box
-                        Positioned(
-                          left: 200,
-                          top: 340,
-                          child: Container(
-                            width: 144,
-                            height: 60,
-                            decoration: ShapeDecoration(
-                              color: Color(0x002F80ED),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.50, color: Color(0xFF2F80ED)),
-                                borderRadius: BorderRadius.circular(7),
+                        //Login Box and text
+                        Consumer<UserInfo>(builder: (context, userInfo, other) {
+                          return Positioned(
+                            left: 200,
+                            top: 340,
+                            child: TextButton(
+                              onPressed: () {
+                                userInfo.updatePassValue(_controller.text);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => withScreenDecoration(
+                                      const Home(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 24),
+                                decoration: ShapeDecoration(
+                                  color: const Color(0x002F80ED),
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 0.50, color: Color(0xFF2F80ED)),
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Login',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.blueAccent.shade200,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        //Login bottom text
-                        Positioned(
-                          left: 202,
-                          top: 354,
-                          child: SizedBox(
-                            width: 142,
-                            height: 40,
-                            child: Text(
-                              'Login',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.blueAccent.shade200,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
+                          );
+                        }),
+
                         //Login headline
                         Positioned(
                           left: 0,
@@ -198,6 +214,25 @@ class _LoginState extends State<Login> {
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
+                            ),
+                          ),
+                        ),
+                        //Password input box
+                        Positioned(
+                          left: 19,
+                          top: 174,
+                          child: Container(
+                            width: 280,
+                            height: 40,
+                            child: TextField(
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                color: Colors.blueAccent,
+                              ),
+                              controller: _controller,
                             ),
                           ),
                         ),
