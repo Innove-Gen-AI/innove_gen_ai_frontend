@@ -5,8 +5,6 @@ import 'package:easy_autocomplete/easy_autocomplete.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-  
-  final String passValue;
 
   @override
   State<Home> createState() => _HomeState();
