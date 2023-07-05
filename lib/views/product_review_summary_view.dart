@@ -22,12 +22,13 @@ class _ProductSummaryState extends State<ProductSummary> {
 
   late Product product;
   late String authToken;
+  late List<String> filters;
 
-  Future<Prediction> retrieveProduct() async {
+  Future<Prediction> retrieveProduct(List<String> filters) async {
     product =
         Provider.of<ProductsInfo>(context, listen: false).getSingleProduct;
     authToken = Provider.of<UserInfo>(context, listen: false).getAuthValue;
-    return backendConnector.callFreeForm(product.productId, authToken);
+    return backendConnector.callFreeForm(product.productId, authToken, filters);
   }
 
   @override
@@ -40,7 +41,7 @@ class _ProductSummaryState extends State<ProductSummary> {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct(),
+          future: retrieveProduct([]),
           builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(
@@ -80,51 +81,58 @@ class _ProductSummaryState extends State<ProductSummary> {
       ),
     );
   }
-}
-
-Widget getMainBody(Widget child, BuildContext context, Product product) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+  
+  Widget getMainBody(Widget child, BuildContext context, Product product) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            padding: const EdgeInsets.all(24),
+            height: 650,
+            width: 325,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.productName,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Overall sentiment',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 18),
+                //replace with scrollable widget containing longer text
+                Expanded(child: child),
+              ],
+            ),
           ),
-          padding: const EdgeInsets.all(24),
-          height: 650,
-          width: 325,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                product.productName,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Overall sentiment',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 18),
-              //replace with scrollable widget containing longer text
-              Expanded(child: child),
-            ],
+          FloatingActionButton(
+            elevation: 2,
+            onPressed: () {
+              retrieveProduct([
+                //TODO refresh page when new filter applied / show filter options and refresh when options applied
+                // "positive",
+                "negative",
+                // "recent"
+              ]);
+            },
+            backgroundColor: Colors.lightBlueAccent.shade200,
+            child: const Icon(
+              Icons.tune,
+              weight: 100,
+              size: 36,
+              color: Colors.white,
+            ),
           ),
-        ),
-        FloatingActionButton(
-          elevation: 2,
-          onPressed: () {},
-          backgroundColor: Colors.lightBlueAccent.shade200,
-          child: const Icon(
-            Icons.tune,
-            weight: 100,
-            size: 36,
-            color: Colors.white,
-          ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

@@ -31,12 +31,14 @@ class BackendConnector {
     }
   }
 
-  Future<Prediction> callFreeForm(String productId, String bearerToken) async {
+  Future<Prediction> callFreeForm(String productId, String bearerToken, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $bearerToken',
       'Content-Type': 'application/json',
     };
+
+    var filtersString = filters.map((e) => "\"$e\"").join(",");
 
     final response = await
     http.post(uri, body: """{
@@ -48,7 +50,8 @@ class BackendConnector {
          "maxOutputTokens": 200,
          "topP": 0.8,
          "topK": 40
-    }
+    },
+    "filters": [$filtersString]
     }""" , headers: headers);
 
 
