@@ -24,11 +24,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   late Product product;
   late String authToken;
 
-  Future<Prediction> retrieveProduct() async {
+  Future<Prediction> retrieveProduct(List<String> filters) async {
     product =
         Provider.of<ProductsInfo>(context, listen: false).getSingleProduct;
     authToken = Provider.of<UserInfo>(context, listen: false).getAuthValue;
-    return backendConnector.callFreeForm(product.productId, authToken);
+    return backendConnector.callFreeForm(product.productId, authToken, filters);
   }
 
   @override
@@ -89,7 +89,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                 Text(
                   'Overall sentiment',
                   style:
-                      prettifyText(Theme.of(context).textTheme.headlineSmall!),
+                  prettifyText(Theme.of(context).textTheme.headlineSmall!),
                 ),
                 const SizedBox(height: 18),
                 //replace with scrollable widget containing longer text
@@ -100,7 +100,14 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
           const SizedBox(height: 18),
           FloatingActionButton(
             elevation: 2,
-            onPressed: () {},
+            onPressed: () {
+              retrieveProduct([
+                //TODO refresh page when new filter applied / show filter options and refresh when options applied
+                // "positive",
+                "negative",
+                // "recent"
+              ]);
+            },
             backgroundColor: Colors.lightBlueAccent.shade200,
             child: const Icon(
               Icons.tune,
@@ -119,7 +126,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct(),
+          future: retrieveProduct([]),
           builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(
