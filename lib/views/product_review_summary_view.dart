@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/models/user_info.dart';
+import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
 import 'package:provider/provider.dart';
 
 import '../connectors/backend_connector.dart';
@@ -14,7 +15,7 @@ class ProductSummary extends StatefulWidget {
   State<ProductSummary> createState() => _ProductSummaryState();
 }
 
-class _ProductSummaryState extends State<ProductSummary> {
+class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   BackendConnector backendConnector = BackendConnector();
 
   // gets data from provider
@@ -22,7 +23,6 @@ class _ProductSummaryState extends State<ProductSummary> {
 
   late Product product;
   late String authToken;
-  late List<String> filters;
 
   Future<Prediction> retrieveProduct(List<String> filters) async {
     product =
@@ -34,6 +34,91 @@ class _ProductSummaryState extends State<ProductSummary> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Widget getMainBody(Widget child, BuildContext context, Product product) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            widthFactor: 7,
+            alignment: Alignment.bottomLeft,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back, color: Colors.grey),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            padding: const EdgeInsets.all(24),
+            height: 650,
+            width: 325,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 9,
+                      child: Text(
+                        product.productName,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    Expanded(
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Overall sentiment',
+                  style:
+                  prettifyText(Theme.of(context).textTheme.headlineSmall!),
+                ),
+                const SizedBox(height: 18),
+                //replace with scrollable widget containing longer text
+                Expanded(child: child),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+          FloatingActionButton(
+            elevation: 2,
+            onPressed: () {
+              retrieveProduct([
+                //TODO refresh page when new filter applied / show filter options and refresh when options applied
+                // "positive",
+                "negative",
+                // "recent"
+              ]);
+            },
+            backgroundColor: Colors.lightBlueAccent.shade200,
+            child: const Icon(
+              Icons.tune,
+              weight: 20,
+              size: 36,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -62,7 +147,7 @@ class _ProductSummaryState extends State<ProductSummary> {
                             children: [
                               Image.network(
                                 product.image,
-                                height: 250,
+                                height: 200,
                               ),
                               const SizedBox(height: 15),
                               Text(
@@ -78,60 +163,6 @@ class _ProductSummaryState extends State<ProductSummary> {
                 product);
           },
         ),
-      ),
-    );
-  }
-  
-  Widget getMainBody(Widget child, BuildContext context, Product product) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            padding: const EdgeInsets.all(24),
-            height: 650,
-            width: 325,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.productName,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Overall sentiment',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 18),
-                //replace with scrollable widget containing longer text
-                Expanded(child: child),
-              ],
-            ),
-          ),
-          FloatingActionButton(
-            elevation: 2,
-            onPressed: () {
-              retrieveProduct([
-                //TODO refresh page when new filter applied / show filter options and refresh when options applied
-                // "positive",
-                "negative",
-                // "recent"
-              ]);
-            },
-            backgroundColor: Colors.lightBlueAccent.shade200,
-            child: const Icon(
-              Icons.tune,
-              weight: 100,
-              size: 36,
-              color: Colors.white,
-            ),
-          ),
-        ],
       ),
     );
   }
