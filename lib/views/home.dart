@@ -59,10 +59,11 @@ class _HomeState extends State<Home> with DecorationUtil {
 
           // auto complete text search field
           Container(
-            padding: const EdgeInsets.only(left: 56),
+            padding: const EdgeInsets.only(left: 40),
+            margin:  const EdgeInsets.symmetric(horizontal: 24),
             decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(36),
                 boxShadow: const [
                   BoxShadow(
                       offset: Offset(0, 4),
@@ -125,20 +126,12 @@ class _HomeState extends State<Home> with DecorationUtil {
           Expanded(
             flex: 2,
             child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: 216,
               child: RichText(
                 text: TextSpan(
-                  text: 'Discover the power of ',
+                  text: 'Discover the power of only relevant reviews',
                   style: Theme.of(context).textTheme.headlineLarge,
-                  children: [
-                    TextSpan(
-                      text: 'relevant reviews',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                decoration: TextDecoration.underline,
-                              ),
-                    ),
-                  ],
                 ),
               ),
             ),
