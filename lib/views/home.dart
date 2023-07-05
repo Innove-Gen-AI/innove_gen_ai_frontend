@@ -26,27 +26,13 @@ class _HomeState extends State<Home> with DecorationUtil {
 
   void handleOnSubmit(Product p){
     Provider.of<ProductsInfo>(context, listen: false).foundProduct(p);
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => withScreenDecoration(const ProductSummary()),
       ),
     );
   }
-
-  //
-  // final List<String> _suggestions = [
-  //   "iPhone 12",
-  //   "Samsung Galaxy S21",
-  //   "MacBook Pro",
-  //   "Google Pixel 5",
-  //   "Sony PlayStation 5",
-  //   "AirPods Pro",
-  //   "Nintendo Switch",
-  //   "Fitbit Versa 3",
-  //   "DJI Mavic Air 2",
-  //   "Amazon Echo Dot"
-  // ];
 
   @override
   void initState() {
