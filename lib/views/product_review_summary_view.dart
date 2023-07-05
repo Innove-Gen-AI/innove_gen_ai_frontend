@@ -31,6 +31,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
         .of<UserInfo>(context, listen: false)
         .getAuthValue;
     return backendConnector.callFreeForm(product.productId, authToken, filters);
+
+    // one for the morning - do we want to make a call to the backend after the user has applied to selected filter or
+    // have all the filtered text options available from the initial call then we only have to replace the text shown when they 'apply' the filter
+
   }
 
   @override
@@ -112,6 +116,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
+                backgroundColor: Colors.transparent,
                 builder: (context) => MyFilterCard(),
               );
             },

@@ -17,7 +17,10 @@ class _MyFilterCardState extends State<MyFilterCard> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
-      color: Colors.lightBlue.shade100,
+      decoration: BoxDecoration(
+        color: Colors.lightBlue.shade100,
+        borderRadius: BorderRadius.circular(20)
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -88,11 +91,13 @@ class _MyFilterCardState extends State<MyFilterCard> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(width: 1, color: Colors.blue),
+                        side: const BorderSide(width: 1, color: Colors.blue),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     child: Text('Cancel',
                         style: Theme
                             .of(context)
