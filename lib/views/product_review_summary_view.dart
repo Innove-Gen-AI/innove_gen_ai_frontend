@@ -27,7 +27,7 @@ class _ProductSummaryState extends State<ProductSummary> {
     product =
         Provider.of<ProductsInfo>(context, listen: false).getSingleProduct;
     authToken = Provider.of<UserInfo>(context, listen: false).getAuthValue;
-    return backendConnector.callSummarise(product.productId, authToken);
+    return backendConnector.callFreeForm(product.productId, authToken);
   }
 
   @override
@@ -50,23 +50,29 @@ class _ProductSummaryState extends State<ProductSummary> {
             }
             return getMainBody(
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.network(
-                      product.image,
-                      height: 300,
-                    ),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Text(
-                          snapshot.data!.content,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.network(
+                                product.image,
+                                height: 250,
+                              ),
+                              const SizedBox(height: 15),
+                              Text(
+                                snapshot.data!.content,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ]),
                 context,
                 product);
           },
@@ -103,7 +109,7 @@ Widget getMainBody(Widget child, BuildContext context, Product product) {
               ),
               const SizedBox(height: 18),
               //replace with scrollable widget containing longer text
-              child,
+              Expanded(child: child),
             ],
           ),
         ),

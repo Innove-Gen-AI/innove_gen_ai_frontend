@@ -31,27 +31,34 @@ class BackendConnector {
     }
   }
 
-  // Future<Prediction> callFreeForm(String productId, String bearerToken) async {
-  //   var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
-  //   final Map<String, String> headers = {
-  //     'Authorization': 'Bearer $bearerToken',
-  //     'Content-Type': 'application/json',
-  //   };
-  //
-  //   final response = await
-  //   http.post(uri, body: """{
-  //   "product_id": "$productId",
-  //   "prompt": "Create a review based off of the inputs. Be detailed and describe the highlights and the drawbacks of the product."
-  //   }""" , headers: headers);
-  //
-  //
-  //   if (response.statusCode == 200) {
-  //     print(response.body);
-  //     return Prediction.fromJson(jsonDecode(response.body));
-  //   } else {
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
+  Future<Prediction> callFreeForm(String productId, String bearerToken) async {
+    var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
+    final Map<String, String> headers = {
+      'Authorization': 'Bearer $bearerToken',
+      'Content-Type': 'application/json',
+    };
+
+    final response = await
+    http.post(uri, body: """{
+    "product_id": "$productId",
+    "prompt": "Create a review based off of the inputs. Be detailed and describe the highlights and the drawbacks of the product.",
+    "datasetSize": 20,
+    "parameters": {
+         "temperature": 0.2,
+         "maxOutputTokens": 200,
+         "topP": 0.8,
+         "topK": 40
+    }
+    }""" , headers: headers);
+
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return Prediction.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 
   Future<List<Product>> callProducts() async {
     var uri = Uri.parse("$_baseUrl/$_productsRoute");
