@@ -71,10 +71,10 @@ class _LoginState extends State<Login> with DecorationUtil {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 24),
                                 decoration: ShapeDecoration(
-                                  color: Color(Colors.blueAccent.shade200.value),
+                                  color: Color(Colors.lightBlueAccent.shade200.value),
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
-                                        width: 0.50, color: Color(0xFF2F80ED)),
+                                        width: 0.50, color: Color(0xFF00B0FF)),
                                     borderRadius: BorderRadius.circular(7),
                                   ),
                                 ),
@@ -116,7 +116,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                color: Color(0xFF2F80ED),
+                                color: Colors.lightBlueAccent.shade400,
                                 fontSize: 14,
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w700,
@@ -134,7 +134,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             child: Text(
                               'Username',
                               style: TextStyle(
-                                color: Color(0xFF2F80ED),
+                                color: Colors.lightBlueAccent.shade400,
                                 fontSize: 14,
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w400,
@@ -152,7 +152,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             child: Text(
                               'Password',
                               style: TextStyle(
-                                color: Color(0xFF2F80ED),
+                                color: Colors.lightBlueAccent.shade400,
                                 fontSize: 14,
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.w400,
@@ -173,7 +173,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                 side: BorderSide(
                                   width: 0.50,
                                   strokeAlign: BorderSide.strokeAlignCenter,
-                                  color: Color(0xFF2F80ED),
+                                  color: Colors.lightBlueAccent.shade400,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -190,7 +190,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             child: Text(
                               'Innove Gen AI',
                               style: TextStyle(
-                                color: Color(0xFF2F80ED),
+                                color: Colors.lightBlueAccent.shade400,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -210,7 +210,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                 side: BorderSide(
                                   width: 0.50,
                                   strokeAlign: BorderSide.strokeAlignCenter,
-                                  color: Color(0xFF2F80ED),
+                                  color: Colors.lightBlueAccent.shade400,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -230,7 +230,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                 border: InputBorder.none,
                               ),
                               style: const TextStyle(
-                                color: Colors.blueAccent,
+                                color: Colors.lightBlueAccent,
                               ),
                               controller: _controller,
                             ),
