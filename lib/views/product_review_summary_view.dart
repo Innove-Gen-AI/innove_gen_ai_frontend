@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:innove_gen_ai_frontend/models/filter_info.dart';
 import 'package:innove_gen_ai_frontend/models/user_info.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
 import 'package:innove_gen_ai_frontend/widgets/filter_card.dart';
@@ -138,7 +139,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct([]),
+          future: retrieveProduct(Provider.of<FilterInfo>(context, listen: false).getFilterOptions),
           builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(

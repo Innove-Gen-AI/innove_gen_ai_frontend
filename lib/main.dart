@@ -5,6 +5,8 @@ import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
 import 'package:innove_gen_ai_frontend/views/splash_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'models/filter_info.dart';
+
 void main() {
   runApp(
     MultiProvider(
@@ -14,6 +16,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => ProductsInfo(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FilterInfo(),
         ),
       ],
       child: const MyApp(),

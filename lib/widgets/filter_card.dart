@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/filter_enums.dart';
+import '../models/filter_info.dart';
 
 class MyFilterCard extends StatefulWidget {
   const MyFilterCard({Key? key}) : super(key: key);
@@ -12,6 +13,10 @@ class MyFilterCard extends StatefulWidget {
 class _MyFilterCardState extends State<MyFilterCard> {
   Set<FilterOptions> filters = <FilterOptions>{};
   int? _value = 1;
+
+  void updateFilterProvider(){
+    Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.map((e) => e.name).toList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +76,11 @@ class _MyFilterCardState extends State<MyFilterCard> {
                       ),
                       onSelected: (bool selected) {
                         setState(() {
+                          if (selected) {
+                            filters.add(option.value);
+                          } else {
+                            filters.remove(option.value);
+                          }
                           _value = selected? option.key: null;
                         });
                       },
