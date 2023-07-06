@@ -7,11 +7,11 @@ enum FilterOptions { Positive, Negative, Recent }
 
 class FilterInfo extends ChangeNotifier {
 
-  late List<String> _filters = [];
+  late List<FilterOptions> _filters = [];
 
-  List<String> get getFilterOptions => _filters;
+  List<FilterOptions> get getFilterOptions => _filters;
 
-  void updateFilters(List<String> options){
+  void updateFilters(List<FilterOptions> options){
     _filters = options;
     notifyListeners();
   }

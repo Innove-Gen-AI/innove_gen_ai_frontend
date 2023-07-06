@@ -29,11 +29,6 @@ void main() {
 class MyApp extends StatelessWidget with DecorationUtil {
   const MyApp({super.key});
 
-  Future<void> _getProducts() {
-    print('Getting products');
-    return Future.delayed(const Duration(seconds: 1));
-  }
-
   // default home
   @override
   Widget build(BuildContext context) {

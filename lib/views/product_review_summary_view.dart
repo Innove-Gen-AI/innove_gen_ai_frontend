@@ -23,7 +23,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   late Product product;
   late String authToken;
 
-  Future<Prediction> retrieveProduct(List<String> filters) async {
+  Future<Prediction> retrieveProduct(List<FilterOptions> filters) async {
     product =
         Provider
             .of<ProductsInfo>(context, listen: false)
@@ -31,11 +31,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
     authToken = Provider
         .of<UserInfo>(context, listen: false)
         .getAuthValue;
-    return backendConnector.callFreeForm(product.productId, authToken, filters);
-
-    // one for the morning - do we want to make a call to the backend after the user has applied to selected filter or
-    // have all the filtered text options available from the initial call then we only have to replace the text shown when they 'apply' the filter
-
+    return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
   }
 
   @override
@@ -139,7 +135,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct(Provider.of<FilterInfo>(context, listen: false).getFilterOptions),
+          future: retrieveProduct(Provider.of<FilterInfo>(context).getFilterOptions),
           builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(

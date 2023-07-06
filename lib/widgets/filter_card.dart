@@ -11,11 +11,27 @@ class MyFilterCard extends StatefulWidget {
 }
 
 class _MyFilterCardState extends State<MyFilterCard> {
-  Set<FilterOptions> filters = <FilterOptions>{};
-  int? _value = 1;
+  //filters
+
+
+  late Set<FilterOptions> filters = <FilterOptions>{};
+  late int? _value;
 
   void updateFilterProvider(){
-    Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.map((e) => e.name).toList());
+    Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.toList());
+  }
+
+
+
+  // _value options
+  // 0 = Positive
+  // 1 = Negative
+  @override
+  void initState() {
+    super.initState();
+    final List<FilterOptions> fInfo = Provider.of<FilterInfo>(context, listen: false).getFilterOptions;
+    filters = fInfo.toSet();
+    _value = fInfo.contains(FilterOptions.Negative)? 1: 0;
   }
 
   @override
@@ -125,7 +141,12 @@ class _MyFilterCardState extends State<MyFilterCard> {
                         backgroundColor: Colors.lightBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {},
+                    onPressed: () {
+                      print('Closing filters card pop up');
+                      print('Applying filters - $filters');
+                      updateFilterProvider();
+                      Navigator.of(context).pop();
+                    },
                     child: Text('Apply',
                         style: Theme
                             .of(context)
