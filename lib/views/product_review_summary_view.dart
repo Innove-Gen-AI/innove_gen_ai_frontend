@@ -142,7 +142,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                   const Center(child: CircularProgressIndicator()),
                   context,
                   product,
-                  "Overall sentiment");
+                  "Generating AI review sentiment..");
             }
             return getMainBody(
                 Column(
