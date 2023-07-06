@@ -49,16 +49,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   }
 
   String sentimentCalculation(List<String> input) {
-    print(input);
     int positive = (input.where((element) => element.contains("positive")).toList()).length;
-    print(positive);
     int negative = (input.where((element) => element.contains("negative")).toList()).length;
-    print(negative);
     int totalCount = positive + negative;
-    print(totalCount);
     double calculation = ((positive - negative) / totalCount) * 100;
     double checkCalculation = calculation < 0 ? 0.00 : calculation;
-
     return checkCalculation.toStringAsFixed(2);
   }
 
