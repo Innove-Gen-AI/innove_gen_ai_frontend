@@ -21,17 +21,27 @@ class _MyFilterCardState extends State<MyFilterCard> {
     Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.toList());
   }
 
-
-
   // _value options
   // 0 = Positive
   // 1 = Negative
   @override
   void initState() {
     super.initState();
+
     final List<FilterOptions> fInfo = Provider.of<FilterInfo>(context, listen: false).getFilterOptions;
+
+    int filterValue() {
+      if(fInfo.contains(FilterOptions.Negative)){
+        return 1;
+      }else if(fInfo.contains(FilterOptions.Positive)) {
+        return 0;
+      } else {
+        return -1;
+      }
+    }
+
     filters = fInfo.toSet();
-    _value = fInfo.contains(FilterOptions.Negative)? 1: 0;
+    _value = filterValue();
   }
 
   @override
@@ -78,7 +88,7 @@ class _MyFilterCardState extends State<MyFilterCard> {
                     );
                   } else {
                     return ChoiceChip(
-                      label: Text(option.value.name),
+                      label: (option.value == FilterOptions.Positive)? const Text('Good'): const Text('Bad'),
                       selected: _value == option.key,
                       labelStyle: TextStyle(
                           color: _value == option.key
@@ -93,6 +103,8 @@ class _MyFilterCardState extends State<MyFilterCard> {
                       onSelected: (bool selected) {
                         setState(() {
                           if (selected) {
+                            filters.remove(FilterOptions.Positive);
+                            filters.remove(FilterOptions.Negative);
                             filters.add(option.value);
                           } else {
                             filters.remove(option.value);

@@ -71,7 +71,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 24),
                                 decoration: ShapeDecoration(
-                                  color: const Color(0x002F80ED),
+                                  color: Color(Colors.blueAccent.shade200.value),
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                         width: 0.50, color: Color(0xFF2F80ED)),
@@ -83,7 +83,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                     'Login',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.blueAccent.shade200,
+                                        color: Colors.white,
                                         fontSize: 24,
                                         fontWeight: FontWeight.w700),
                                   ),
@@ -168,7 +168,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             width: 309,
                             height: 40,
                             decoration: ShapeDecoration(
-                              color: Color(0x002F80ED),
+                              color: Color(Colors.white.value),
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 0.50,
@@ -205,7 +205,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             width: 309,
                             height: 40,
                             decoration: ShapeDecoration(
-                              color: Color(0x002F80ED),
+                              color: Color(Colors.white.value),
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 0.50,
