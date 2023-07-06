@@ -7,6 +7,7 @@ class BackendConnector {
 
   final String _baseUrl = "http://localhost:10041";
   final String _summariseRoute = 'summarise';
+  final String _sentimentAnalysisRoute = 'sentiment-analysis';
   final String _freeFormRoute = 'freeform';
   final String _productsRoute = 'products';
 
@@ -31,6 +32,38 @@ class BackendConnector {
     }
   }
 
+  List<String> filterValue(List<String> filters) {
+    if(filters.contains("Negative") && filters.contains("Positive")){
+      return filters.where((element) => element == "Recent" || element == "Sponsored").toList();
+    } else {
+      return filters;
+    }
+  }
+
+  Future<Prediction> callSentimentAnalysis(String productId, String bearerToken, List<String> filters) async {
+    var uri = Uri.parse("$_baseUrl/$_sentimentAnalysisRoute");
+    final Map<String, String> headers = {
+      'Authorization': 'Bearer $bearerToken',
+      'Content-Type': 'application/json',
+    };
+
+    var filtersString = filterValue(filters).map((e) => "\"${e.toLowerCase()}\"").join(",");
+
+    final response = await
+    http.post(uri, body: """{
+    "product_id": "$productId",
+    "datasetSize": 20,
+    "filters": [$filtersString]
+    }""" , headers: headers);
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return Prediction.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   Future<Prediction> callFreeForm(String productId, String bearerToken, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
     final Map<String, String> headers = {
@@ -38,20 +71,12 @@ class BackendConnector {
       'Content-Type': 'application/json',
     };
 
-    List<String> filterValue() {
-      if(filters.contains("Negative") && filters.contains("Positive")){
-        return filters.where((element) => element == "Recent" || element == "Sponsored").toList();
-      } else {
-        return filters;
-      }
-    }
-
-    var filtersString = filterValue().map((e) => "\"${e.toLowerCase()}\"").join(",");
+    var filtersString = filterValue(filters).map((e) => "\"${e.toLowerCase()}\"").join(",");
 
     String prompt() {
-      if(filterValue().contains("Positive")){
+      if(filterValue(filters).contains("Positive")){
         return "Be detailed and describe the highlights of the product.";
-      } else if(filterValue().contains("Negative")){
+      } else if(filterValue(filters).contains("Negative")){
         return "Be detailed and describe the drawbacks of the product.";
       } else {
         return "Be detailed and describe the highlights and the drawbacks of the product.";
