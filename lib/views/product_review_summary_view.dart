@@ -35,6 +35,17 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
   }
 
+  Future<Prediction> retrieveSentimentAnalysis(List<FilterOptions> filters) async {
+    product =
+        Provider
+            .of<ProductsInfo>(context, listen: false)
+            .getSingleProduct;
+    authToken = Provider
+        .of<UserInfo>(context, listen: false)
+        .getAuthValue;
+    return backendConnector.callSentimentAnalysis(product.productId, authToken, filters.map((e) => e.name).toList());
+  }
+
   @override
   void initState() {
     super.initState();
