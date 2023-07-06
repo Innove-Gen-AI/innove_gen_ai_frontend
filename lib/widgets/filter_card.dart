@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:innove_gen_ai_frontend/views/product_review_summary_view.dart';
 import 'package:provider/provider.dart';
 
 import '../models/filter_info.dart';
+import '../util/decoration_util.dart';
 
 class MyFilterCard extends StatefulWidget {
   const MyFilterCard({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class MyFilterCard extends StatefulWidget {
   _MyFilterCardState createState() => _MyFilterCardState();
 }
 
-class _MyFilterCardState extends State<MyFilterCard> {
+class _MyFilterCardState extends State<MyFilterCard> with DecorationUtil {
 
   late Set<FilterOptions> filters = <FilterOptions>{};
 
@@ -111,6 +113,12 @@ class _MyFilterCardState extends State<MyFilterCard> {
                       print('Applying filters - $filters');
                       updateFilterProvider();
                       Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => withScreenDecoration(const ProductSummary()),
+                        ),
+                      );
                     },
                     child: Text('Apply',
                         style: Theme
