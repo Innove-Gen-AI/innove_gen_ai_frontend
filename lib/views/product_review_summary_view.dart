@@ -17,11 +17,12 @@ class ProductSummary extends StatefulWidget {
   State<ProductSummary> createState() => _ProductSummaryState();
 }
 
-class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
+class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, TickerProviderStateMixin{
   BackendConnector backendConnector = BackendConnector();
 
   late Product product;
   late String authToken;
+  late final TabController _tabBarController;
 
   Future<Prediction> retrieveProduct(List<FilterOptions> filters) async {
     product =
@@ -48,8 +49,14 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   @override
   void initState() {
     super.initState();
+    _tabBarController = TabController(length: 2, vsync: this);
   }
 
+  @override
+  void dispose() {
+    _tabBarController.dispose();
+    super.dispose();
+  }
 
   Widget getMainBody(Widget child, BuildContext context, Product product, String title) {
     return Center(
@@ -75,6 +82,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
             height: 650,
             width: 325,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -104,17 +112,52 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  title,
-                  style:
-                  prettifyText(Theme
-                      .of(context)
-                      .textTheme
-                      .headlineSmall!),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: TabBar.secondary(
+                        isScrollable: true, // Allows the tabs to scroll horizontally
+                        indicatorPadding: EdgeInsets.zero, // Removes padding around the selected tab indicator
+                        labelPadding: EdgeInsets.symmetric(horizontal: 8.0), // Reduces horizontal padding around the tab labels
+                        labelColor: Colors.lightBlueAccent.shade200,
+                        unselectedLabelColor: Colors.grey,
+                        labelStyle: prettifyText(Theme.of(context).textTheme.labelLarge!),
+                        controller: _tabBarController,
+                        tabs: const <Widget>[
+                          Tab(text: 'Review'),
+                          Tab(text: 'Data'),
+                        ],
+                      ),
+                    ),
+                     Expanded(flex: 1,child: Container())
+                  ],
                 ),
-                const SizedBox(height: 18),
-                //replace with scrollable widget containing longer text
-                Expanded(child: child),
+                Expanded(child: TabBarView(
+                  controller: _tabBarController,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height: 20.0),
+                        Text(
+                          title,
+                          style:
+                          prettifyText(Theme
+                              .of(context)
+                              .textTheme
+                              .headlineSmall!),
+                        ),
+                        const SizedBox(height: 18),
+                        //replace with scrollable widget containing longer text
+                        Expanded(child: child),
+                      ],
+                    ),
+                    Column(children: [
+                      SizedBox(height: 20.0),
+                      Text('Data goes here')
+                    ],)
+                  ],
+                ))
               ],
             ),
           ),
