@@ -11,37 +11,19 @@ class MyFilterCard extends StatefulWidget {
 }
 
 class _MyFilterCardState extends State<MyFilterCard> {
-  //filters
-
 
   late Set<FilterOptions> filters = <FilterOptions>{};
-  late int? _value;
 
   void updateFilterProvider(){
     Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.toList());
   }
 
-  // _value options
-  // 0 = Positive
-  // 1 = Negative
   @override
   void initState() {
     super.initState();
 
     final List<FilterOptions> fInfo = Provider.of<FilterInfo>(context, listen: false).getFilterOptions;
-
-    int filterValue() {
-      if(fInfo.contains(FilterOptions.Negative)){
-        return 1;
-      }else if(fInfo.contains(FilterOptions.Positive)) {
-        return 0;
-      } else {
-        return -1;
-      }
-    }
-
     filters = fInfo.toSet();
-    _value = filterValue();
   }
 
   @override
@@ -61,7 +43,6 @@ class _MyFilterCardState extends State<MyFilterCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: FilterOptions.values.asMap().entries.map((option) {
-                  if (option.value.name == "Recent") {
                     return FilterChip(
                       showCheckmark: false,
                       label: Text(option.value.name),
@@ -86,34 +67,6 @@ class _MyFilterCardState extends State<MyFilterCard> {
                         });
                       },
                     );
-                  } else {
-                    return ChoiceChip(
-                      label: (option.value == FilterOptions.Positive)? const Text('Good'): const Text('Bad'),
-                      selected: _value == option.key,
-                      labelStyle: TextStyle(
-                          color: _value == option.key
-                              ? Colors.white
-                              : Colors.lightBlue),
-                      selectedColor: Colors.lightBlue,
-                      backgroundColor: Colors.lightBlue.shade100,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(width: 1, color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          if (selected) {
-                            filters.remove(FilterOptions.Positive);
-                            filters.remove(FilterOptions.Negative);
-                            filters.add(option.value);
-                          } else {
-                            filters.remove(option.value);
-                          }
-                          _value = selected? option.key: null;
-                        });
-                      },
-                    );
-                  }
                 }).toList(),
               ),
             ],

@@ -21,10 +21,11 @@ class _HomeState extends State<Home> with DecorationUtil {
 
   // replace with call to backend or directly to db to fetch product from list
   Product fetchProduct(List<Product> products) {
-    return products.singleWhere((element) => element.productName == _controller.text);
+    return products
+        .singleWhere((element) => element.productName == _controller.text);
   }
 
-  void handleOnSubmit(Product p){
+  void handleOnSubmit(Product p) {
     Provider.of<ProductsInfo>(context, listen: false).foundProduct(p);
     Navigator.push(
       context,
@@ -45,11 +46,8 @@ class _HomeState extends State<Home> with DecorationUtil {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -60,7 +58,7 @@ class _HomeState extends State<Home> with DecorationUtil {
           // auto complete text search field
           Container(
             padding: const EdgeInsets.only(left: 40),
-            margin:  const EdgeInsets.symmetric(horizontal: 24),
+            margin: const EdgeInsets.symmetric(horizontal: 24),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(36),
@@ -71,15 +69,16 @@ class _HomeState extends State<Home> with DecorationUtil {
                       blurRadius: 2)
                 ]),
             child: Consumer<ProductsInfo>(
-              builder: (context, products, child){
-
+              builder: (context, products, child) {
                 var listOfProducts = products.getProducts;
 
                 return EasyAutocomplete(
                   controller: _controller,
-                  suggestions: listOfProducts.map((e) => e.productName).toList(),
+                  suggestions:
+                      listOfProducts.map((e) => e.productName).toList(),
                   suggestionBackgroundColor: Colors.white,
-                  onSubmitted: (value) => handleOnSubmit(fetchProduct(listOfProducts)),
+                  onSubmitted: (value) =>
+                      handleOnSubmit(fetchProduct(listOfProducts)),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'Search anything...',
@@ -128,11 +127,11 @@ class _HomeState extends State<Home> with DecorationUtil {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               height: 216,
-              child: RichText(
-                text: TextSpan(
-                  text: 'Discover the power of only relevant reviews',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+              child: Text(
+                textAlign: TextAlign.center,
+                'Experience the revolution of tailored reviews',
+                style: prettifyText(Theme.of(context).textTheme.headlineMedium!)
+                    .copyWith(color: Colors.grey.shade400, fontSize: 37),
               ),
             ),
           ),

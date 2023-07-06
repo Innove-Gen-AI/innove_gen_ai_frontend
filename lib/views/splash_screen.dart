@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4)).then(
+    Future.delayed(const Duration(seconds: 5)).then(
       (value) => myFuture =
           Provider.of<ProductsInfo>(context, listen: false).populateList().then(
                 (value) => Navigator.pushReplacement(
@@ -51,18 +51,22 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(46)),
-              ),
               Center(
                 child: Text(
-                  'Reviews you can trust',
+                  'AI.Rev→',
                   style:
-                      prettifyText(Theme.of(context).textTheme.headlineMedium!),
+                  prettifyText(Theme.of(context).textTheme.headlineLarge!).copyWith(fontSize: 70),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Text(
+                    'Tap into handpicked reviews',
+                    textAlign: TextAlign.center,
+                    style:
+                        prettifyText(Theme.of(context).textTheme.headlineMedium!).copyWith(color: Colors.grey.shade400, fontSize: 40),
+                  ),
                 ),
               ),
             ],
