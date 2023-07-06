@@ -9,6 +9,7 @@ import '../connectors/backend_connector.dart';
 import '../models/ProductResponse.dart';
 import '../models/SentimentAnalysisResponse.dart';
 import '../models/products_info.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ProductSummary extends StatefulWidget {
   const ProductSummary({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   late String authToken;
   late final TabController _tabBarController;
 
-  List<String> convertToList(String input) => input.replaceAll("'","\"").replaceAll("[", "").replaceAll("]","").split(",");
+  List<String> convertToList(String input) => input.replaceAll("[", "").replaceAll("]","").replaceAll("\\", "").split(",").map((e) => e.trim()).map((e) => e.substring(1, e.length - 1)).toList();
 
   Future<Prediction> retrieveReview(List<FilterOptions> filters) async {
     product =
@@ -34,6 +35,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     authToken = Provider
         .of<UserInfo>(context, listen: false)
         .getAuthValue;
+
     return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
   }
 
@@ -176,24 +178,37 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                       ],
                     ),
                     sentimentAnalysis.isEmpty ? Center(child: CircularProgressIndicator()) :
-                    Column(children: [
-                      const SizedBox(height: 20.0),
-                      Text('Sentiment Score', style: prettifyText(Theme.of(context).textTheme.titleLarge!)),
-                      const SizedBox(height: 20.0),
-                      Text(sentimentCalculation(sentimentAnalysis), style: prettifyText(Theme.of(context).textTheme.titleMedium!).copyWith(color: Colors.black)),
-                      const SizedBox(height: 20.0),
-                      Text('Keywords', style: prettifyText(Theme.of(context).textTheme.titleLarge!)),
-                      const SizedBox(height: 20.0),
-                      Flexible(
-                        child: SingleChildScrollView(
+                    ListView(
+                      children: [
+                        const SizedBox(height: 16.0),
+                        Center(child: Text('Keywords', style: prettifyText(Theme.of(context).textTheme.titleLarge!))),
+                        const SizedBox(height: 3.0),
+                        Center(
                           child: Wrap(
                             children: keywords.map((e) => Padding(
-                              padding: const EdgeInsets.all(2.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
                               child: Chip(label: Text(e)),
                             )).toList(),
                           ),
                         ),
-                      )
+                        const SizedBox(height: 3.0),
+                      SfRadialGauge(
+                        enableLoadingAnimation: true, title: GaugeTitle(text: 'Sentiment Score', textStyle: prettifyText(Theme.of(context).textTheme.titleLarge!)),
+                          axes: <RadialAxis>[
+                            RadialAxis(minimum: 0, maximum: 100.000001, startAngle: 180, endAngle: 0, ticksPosition: ElementsPosition.outside, labelsPosition: ElementsPosition.outside,
+                                ranges: <GaugeRange>[
+                                  GaugeRange(startValue: 0, endValue: 33, color:Colors.red, label: "Negative", startWidth: 0.3, endWidth: 0.3, sizeUnit: GaugeSizeUnit.factor),
+                                  GaugeRange(startValue: 33,endValue: 66,color: Colors.orange, label: "Neutral", startWidth: 0.3, endWidth: 0.3, sizeUnit: GaugeSizeUnit.factor),
+                                  GaugeRange(startValue: 66,endValue: 100,color: Colors.green, label: "Positive", startWidth: 0.3, endWidth: 0.3, sizeUnit: GaugeSizeUnit.factor)],
+                                pointers: <GaugePointer>[
+                                  NeedlePointer(value: double.parse(sentimentCalculation(sentimentAnalysis)), enableAnimation: true,)],
+                                annotations: <GaugeAnnotation>[
+                                  GaugeAnnotation(widget: Container(child:
+                                  Text(sentimentCalculation(sentimentAnalysis) ,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                                      angle: 90, positionFactor: 0.3
+                                  )]
+                            )]),
+
                     ],)
                   ],
                 ))
