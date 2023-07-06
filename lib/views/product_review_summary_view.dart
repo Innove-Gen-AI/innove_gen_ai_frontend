@@ -114,7 +114,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
               showModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,
-                builder: (context) => MyFilterCard(),
+                builder: (context) => const MyFilterCard(),
               );
             },
             backgroundColor: Colors.lightBlueAccent.shade200,

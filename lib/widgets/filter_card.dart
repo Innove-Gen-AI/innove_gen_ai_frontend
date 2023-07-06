@@ -21,8 +21,6 @@ class _MyFilterCardState extends State<MyFilterCard> {
     Provider.of<FilterInfo>(context, listen: false).updateFilters(filters.toList());
   }
 
-
-
   // _value options
   // 0 = Positive
   // 1 = Negative
@@ -78,7 +76,7 @@ class _MyFilterCardState extends State<MyFilterCard> {
                     );
                   } else {
                     return ChoiceChip(
-                      label: Text(option.value.name),
+                      label: (option.value == FilterOptions.Positive)? const Text('Good'): const Text('Bad'),
                       selected: _value == option.key,
                       labelStyle: TextStyle(
                           color: _value == option.key
