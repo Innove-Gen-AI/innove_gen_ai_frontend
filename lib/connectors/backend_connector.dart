@@ -38,7 +38,7 @@ class BackendConnector {
       'Content-Type': 'application/json',
     };
 
-    var filtersString = filters.map((e) => "\"$e\"").join(",");
+    var filtersString = filters.map((e) => "\"${e.toLowerCase()}\"").join(",");
 
     final response = await
     http.post(uri, body: """{
@@ -47,7 +47,7 @@ class BackendConnector {
     "datasetSize": 20,
     "parameters": {
          "temperature": 0.2,
-         "maxOutputTokens": 200,
+         "maxOutputTokens": 400,
          "topP": 0.8,
          "topK": 40
     },
