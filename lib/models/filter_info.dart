@@ -2,12 +2,11 @@
 // ignore: constant_identifier_names
 import 'package:flutter/cupertino.dart';
 
-enum FilterOptions { Positive, Negative, Recent }
-
+enum FilterOptions { Positive, Negative, Recent, Sponsored }
 
 class FilterInfo extends ChangeNotifier {
 
-  late List<FilterOptions> _filters = [];
+  late List<FilterOptions> _filters = [FilterOptions.Positive,FilterOptions.Negative,FilterOptions.Recent,FilterOptions.Sponsored];
 
   List<FilterOptions> get getFilterOptions => _filters;
 

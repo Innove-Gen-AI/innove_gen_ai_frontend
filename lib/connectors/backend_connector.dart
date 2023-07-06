@@ -38,12 +38,30 @@ class BackendConnector {
       'Content-Type': 'application/json',
     };
 
-    var filtersString = filters.map((e) => "\"${e.toLowerCase()}\"").join(",");
+    List<String> filterValue() {
+      if(filters.contains("Negative") && filters.contains("Positive")){
+        return filters.where((element) => element == "Recent" || element == "Sponsored").toList();
+      } else {
+        return filters;
+      }
+    }
+
+    var filtersString = filterValue().map((e) => "\"${e.toLowerCase()}\"").join(",");
+
+    String prompt() {
+      if(filterValue().contains("Positive")){
+        return "Be detailed and describe the highlights of the product.";
+      } else if(filterValue().contains("Negative")){
+        return "Be detailed and describe the drawbacks of the product.";
+      } else {
+        return "Be detailed and describe the highlights and the drawbacks of the product.";
+      }
+    }
 
     final response = await
     http.post(uri, body: """{
     "product_id": "$productId",
-    "prompt": "Create a review based off of the inputs. Be detailed and describe the highlights and the drawbacks of the product.",
+    "prompt": "Create a review based off of the inputs. ${prompt()} Keep the review to one paragraph.",
     "datasetSize": 20,
     "parameters": {
          "temperature": 0.2,

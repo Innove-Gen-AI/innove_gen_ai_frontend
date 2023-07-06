@@ -40,7 +40,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   }
 
 
-  Widget getMainBody(Widget child, BuildContext context, Product product) {
+  Widget getMainBody(Widget child, BuildContext context, Product product, String title) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -94,7 +94,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Overall sentiment',
+                  title,
                   style:
                   prettifyText(Theme
                       .of(context)
@@ -141,7 +141,8 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
               return getMainBody(
                   const Center(child: CircularProgressIndicator()),
                   context,
-                  product);
+                  product,
+                  "Overall sentiment");
             }
             return getMainBody(
                 Column(
@@ -172,7 +173,8 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                       ),
                     ]),
                 context,
-                product);
+                product,
+            snapshot.data!.title);
           },
         ),
       ),
