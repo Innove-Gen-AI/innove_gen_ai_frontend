@@ -24,7 +24,9 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   late String authToken;
   late final TabController _tabBarController;
 
-  Future<Prediction> retrieveProduct(List<FilterOptions> filters) async {
+  List<String> convertToList(String input) => input.replaceAll("'","\"").replaceAll("[", "").replaceAll("]","").split(",");
+
+  Future<Prediction> retrieveReview(List<FilterOptions> filters) async {
     product =
         Provider
             .of<ProductsInfo>(context, listen: false)
@@ -54,7 +56,17 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     authToken = Provider
         .of<UserInfo>(context, listen: false)
         .getAuthValue;
-    return backendConnector.callKeywords(product.productId, authToken, filters.map((e) => e.name).toList());
+    return backendConnector.callKeywords(
+        product.productId, authToken, filters.map((e) => e.name).toList());
+  }
+
+  String sentimentCalculation(List<String> input) {
+    int positive = (input.where((element) => element.contains("positive")).toList()).length;
+    int negative = (input.where((element) => element.contains("negative")).toList()).length;
+    int totalCount = positive + negative;
+    double calculation = ((positive - negative) / totalCount) * 100;
+    double checkCalculation = calculation < 0 ? 0.00 : calculation;
+    return checkCalculation.toStringAsFixed(2);
   }
 
   @override
@@ -69,7 +81,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     super.dispose();
   }
 
-  Widget getMainBody(Widget child, BuildContext context, Product product, String title) {
+  Widget getMainBody(Widget child, BuildContext context, Product product, String title, List<String> sentimentAnalysis, List<String> keywords) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -149,23 +161,39 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 20.0),
+                        SizedBox(height: 12.0),
                         Text(
                           title,
                           style:
                           prettifyText(Theme
                               .of(context)
                               .textTheme
-                              .headlineSmall!),
+                              .titleLarge!),
                         ),
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 10),
                         //replace with scrollable widget containing longer text
                         Expanded(child: child),
                       ],
                     ),
+                    sentimentAnalysis.isEmpty ? Center(child: CircularProgressIndicator()) :
                     Column(children: [
-                      SizedBox(height: 20.0),
-                      Text('Data goes here')
+                      const SizedBox(height: 20.0),
+                      Text('Sentiment Score', style: prettifyText(Theme.of(context).textTheme.titleLarge!)),
+                      const SizedBox(height: 20.0),
+                      Text(sentimentCalculation(sentimentAnalysis), style: prettifyText(Theme.of(context).textTheme.titleMedium!).copyWith(color: Colors.black)),
+                      const SizedBox(height: 20.0),
+                      Text('Keywords', style: prettifyText(Theme.of(context).textTheme.titleLarge!)),
+                      const SizedBox(height: 20.0),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            children: keywords.map((e) => Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Chip(label: Text(e)),
+                            )).toList(),
+                          ),
+                        ),
+                      )
                     ],)
                   ],
                 ))
@@ -200,14 +228,16 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct(Provider.of<FilterInfo>(context).getFilterOptions),
-          builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
+          future: Future.wait([retrieveReview(Provider.of<FilterInfo>(context).getFilterOptions),
+            retrieveSentimentAnalysis(Provider.of<FilterInfo>(context).getFilterOptions),
+            retrieveKeywords(Provider.of<FilterInfo>(context).getFilterOptions)]),
+          builder: (BuildContext context, AsyncSnapshot<List<Prediction>> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(
                   const Center(child: CircularProgressIndicator()),
                   context,
                   product,
-                  "Generating AI review sentiment..");
+                  "Generating AI review sentiment..",List.empty(), List.empty());
             }
             return getMainBody(
                 Column(
@@ -222,11 +252,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                             children: [
                               Image.network(
                                 product.image,
-                                height: 200,
+                                height: 180,
                               ),
                               const SizedBox(height: 15),
                               Text(
-                                snapshot.data!.content,
+                                snapshot.data![0].content,
                                 style: Theme
                                     .of(context)
                                     .textTheme
@@ -239,7 +269,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                     ]),
                 context,
                 product,
-            snapshot.data!.title);
+            snapshot.data![0].title,
+            convertToList(snapshot.data![1].content),
+            convertToList(snapshot.data![2].content)
+            );
           },
         ),
       ),
