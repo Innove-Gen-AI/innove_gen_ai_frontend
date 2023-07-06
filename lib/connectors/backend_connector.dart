@@ -6,23 +6,26 @@ import 'package:innove_gen_ai_frontend/models/ProductResponse.dart';
 class BackendConnector {
 
   final String _baseUrl = "http://localhost:10041";
-  final String _summariseRoute = 'summarise';
+  final String _keywordsRoute = 'keywords';
   final String _sentimentAnalysisRoute = 'sentiment-analysis';
   final String _freeFormRoute = 'freeform';
   final String _productsRoute = 'products';
 
-  Future<Prediction> callSummarise(String productId, String bearerToken) async {
-    var uri = Uri.parse("$_baseUrl/$_summariseRoute");
+  Future<Prediction> callKeywords(String productId, String bearerToken, List<String> filters) async {
+    var uri = Uri.parse("$_baseUrl/$_keywordsRoute");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $bearerToken',
       'Content-Type': 'application/json',
     };
 
+    var filtersString = filterValue(filters).map((e) => "\"${e.toLowerCase()}\"").join(",");
+
     final response = await
     http.post(uri, body: """{
-    "product_id": "$productId"
+    "product_id": "$productId",
+    "datasetSize": 20,
+    "filters": [$filtersString]
     }""" , headers: headers);
-
 
     if (response.statusCode == 200) {
       print(response.body);
