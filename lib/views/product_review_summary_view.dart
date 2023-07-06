@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:innove_gen_ai_frontend/models/filter_info.dart';
 import 'package:innove_gen_ai_frontend/models/user_info.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
+import 'package:innove_gen_ai_frontend/widgets/filter_card.dart';
 import 'package:provider/provider.dart';
 
 import '../connectors/backend_connector.dart';
@@ -18,23 +20,25 @@ class ProductSummary extends StatefulWidget {
 class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
   BackendConnector backendConnector = BackendConnector();
 
-  // gets data from provider
-  // makes function call to backend to summarise
-
   late Product product;
   late String authToken;
 
-  Future<Prediction> retrieveProduct(List<String> filters) async {
+  Future<Prediction> retrieveProduct(List<FilterOptions> filters) async {
     product =
-        Provider.of<ProductsInfo>(context, listen: false).getSingleProduct;
-    authToken = Provider.of<UserInfo>(context, listen: false).getAuthValue;
-    return backendConnector.callFreeForm(product.productId, authToken, filters);
+        Provider
+            .of<ProductsInfo>(context, listen: false)
+            .getSingleProduct;
+    authToken = Provider
+        .of<UserInfo>(context, listen: false)
+        .getAuthValue;
+    return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
   }
 
   @override
   void initState() {
     super.initState();
   }
+
 
   Widget getMainBody(Widget child, BuildContext context, Product product) {
     return Center(
@@ -69,7 +73,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                       flex: 9,
                       child: Text(
                         product.productName,
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .titleLarge,
                       ),
                     ),
                     Expanded(
@@ -89,7 +96,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                 Text(
                   'Overall sentiment',
                   style:
-                  prettifyText(Theme.of(context).textTheme.headlineSmall!),
+                  prettifyText(Theme
+                      .of(context)
+                      .textTheme
+                      .headlineSmall!),
                 ),
                 const SizedBox(height: 18),
                 //replace with scrollable widget containing longer text
@@ -101,12 +111,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
           FloatingActionButton(
             elevation: 2,
             onPressed: () {
-              retrieveProduct([
-                //TODO refresh page when new filter applied / show filter options and refresh when options applied
-                // "positive",
-                "negative",
-                // "recent"
-              ]);
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => MyFilterCard(),
+              );
             },
             backgroundColor: Colors.lightBlueAccent.shade200,
             child: const Icon(
@@ -126,7 +135,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: retrieveProduct([]),
+          future: retrieveProduct(Provider.of<FilterInfo>(context).getFilterOptions),
           builder: (BuildContext context, AsyncSnapshot<Prediction> snapshot) {
             if (!snapshot.hasData) {
               return getMainBody(
@@ -152,7 +161,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil {
                               const SizedBox(height: 15),
                               Text(
                                 snapshot.data!.content,
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .bodyMedium,
                               )
                             ],
                           ),
