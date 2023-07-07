@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
                 child: Padding(
                   padding: const EdgeInsets.all(50.0),
                   child: Text(
-                    'Tap into handpicked reviews',
+                    'The power of AI curated reviews',
                     textAlign: TextAlign.center,
                     style:
                         prettifyText(Theme.of(context).textTheme.headlineMedium!).copyWith(color: Colors.grey.shade400, fontSize: 40),
