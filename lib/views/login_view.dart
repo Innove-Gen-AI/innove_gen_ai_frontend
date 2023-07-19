@@ -15,7 +15,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> with DecorationUtil {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
 
   late String passValue;
 
@@ -26,7 +27,8 @@ class _LoginState extends State<Login> with DecorationUtil {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _passController.dispose();
+    _userNameController.dispose();
     super.dispose();
   }
 
@@ -57,7 +59,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                             top: 340,
                             child: TextButton(
                               onPressed: () {
-                                userInfo.updatePassValue(_controller.text);
+                                userInfo.updateAuthValues(_userNameController.text, _passController.text);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -78,7 +80,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                                     borderRadius: BorderRadius.circular(7),
                                   ),
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Text(
                                     'Login',
                                     textAlign: TextAlign.center,
@@ -165,7 +167,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                           left: 4,
                           top: 99,
                           child: Container(
-                            width: 309,
+                            width: 280,
                             height: 40,
                             decoration: ShapeDecoration(
                               color: Color(Colors.white.value),
@@ -187,13 +189,14 @@ class _LoginState extends State<Login> with DecorationUtil {
                           child: SizedBox(
                             width: 338,
                             height: 20,
-                            child: Text(
-                              'Innove Gen AI',
-                              style: TextStyle(
-                                color: Colors.lightBlueAccent.shade400,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
                               ),
+                              style: const TextStyle(
+                                color: Colors.lightBlueAccent,
+                              ),
+                              controller: _userNameController,
                             ),
                           ),
                         ),
@@ -232,7 +235,7 @@ class _LoginState extends State<Login> with DecorationUtil {
                               style: const TextStyle(
                                 color: Colors.lightBlueAccent,
                               ),
-                              controller: _controller,
+                              controller: _passController,
                             ),
                           ),
                         ),
