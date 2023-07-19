@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class UserInfo extends ChangeNotifier {
 
   late String _passValue;
-  
-  String get getAuthValue => _passValue;
+  late String _userNameValue;
 
-  void updatePassValue(String value) {
-    _passValue = value;
+  List<String> get getAuthValues => [_passValue, _userNameValue];
+
+
+  void updateAuthValues(String username, String pass) {
+    _userNameValue = username;
+    _passValue = pass;
     notifyListeners();
   }
 
   void clearPassValue() {
+    _userNameValue = '';
     _passValue = '';
     notifyListeners();
   }

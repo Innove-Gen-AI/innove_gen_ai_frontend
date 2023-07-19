@@ -22,7 +22,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   BackendConnector backendConnector = BackendConnector();
 
   late Product product;
-  late String authToken;
+  late List<String> authValues;
   late final TabController _tabBarController;
 
   List<String> convertToList(String input) => input.replaceAll("[", "").replaceAll("]","").replaceAll("\\", "").split(",").map((e) => e.trim()).map((e) => e.substring(1, e.length - 1)).toList();
@@ -32,11 +32,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
         Provider
             .of<ProductsInfo>(context, listen: false)
             .getSingleProduct;
-    authToken = Provider
+    authValues = Provider
         .of<UserInfo>(context, listen: false)
-        .getAuthValue;
+        .getAuthValues;
 
-    return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
+    return backendConnector.callFreeForm(product.productId, authValues.first, authValues.last, filters.map((e) => e.name).toList());
   }
 
   Future<Prediction> retrieveSentimentAnalysis(List<FilterOptions> filters) async {
@@ -44,10 +44,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
         Provider
             .of<ProductsInfo>(context, listen: false)
             .getSingleProduct;
-    authToken = Provider
+    authValues = Provider
         .of<UserInfo>(context, listen: false)
-        .getAuthValue;
-    return backendConnector.callSentimentAnalysis(product.productId, authToken, filters.map((e) => e.name).toList());
+        .getAuthValues;
+    return backendConnector.callSentimentAnalysis(product.productId, authValues.first, authValues.last, filters.map((e) => e.name).toList());
   }
 
   Future<Prediction> retrieveKeywords(List<FilterOptions> filters) async {
@@ -55,11 +55,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
         Provider
             .of<ProductsInfo>(context, listen: false)
             .getSingleProduct;
-    authToken = Provider
+    authValues = Provider
         .of<UserInfo>(context, listen: false)
-        .getAuthValue;
+        .getAuthValues;
     return backendConnector.callKeywords(
-        product.productId, authToken, filters.map((e) => e.name).toList());
+        product.productId, authValues.first, authValues.last, filters.map((e) => e.name).toList());
   }
 
   String sentimentCalculation(List<String> input) {

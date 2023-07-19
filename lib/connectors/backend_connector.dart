@@ -11,7 +11,7 @@ class BackendConnector {
   final String _freeFormRoute = 'freeform';
   final String _productsRoute = 'products';
 
-  Future<Prediction> callKeywords(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callKeywords(String productId, String bearerToken, String projectId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_keywordsRoute");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $bearerToken',
@@ -43,7 +43,7 @@ class BackendConnector {
     }
   }
 
-  Future<Prediction> callSentimentAnalysis(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callSentimentAnalysis(String productId, String bearerToken, String projectId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_sentimentAnalysisRoute");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $bearerToken',
@@ -54,6 +54,7 @@ class BackendConnector {
 
     final response = await
     http.post(uri, body: """{
+    "projectId": "$projectId",
     "product_id": "$productId",
     "datasetSize": 20,
     "filters": [$filtersString]
@@ -67,7 +68,7 @@ class BackendConnector {
     }
   }
 
-  Future<Prediction> callFreeForm(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callFreeForm(String productId, String bearerToken, String projectId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $bearerToken',
@@ -88,6 +89,7 @@ class BackendConnector {
 
     final response = await
     http.post(uri, body: """{
+    "projectId": "$projectId",
     "product_id": "$productId",
     "prompt": "Create a review based off of the inputs. ${prompt()} Keep the review to one paragraph.",
     "datasetSize": 20,
