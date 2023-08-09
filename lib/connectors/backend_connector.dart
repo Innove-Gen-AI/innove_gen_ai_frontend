@@ -23,7 +23,7 @@ class BackendConnector {
     final response = await
     http.post(uri, body: """{
     "product_id": "$productId",
-    "datasetSize": 20,
+    "datasetSize": 40,
     "filters": [$filtersString]
     }""" , headers: headers);
 
@@ -55,7 +55,7 @@ class BackendConnector {
     final response = await
     http.post(uri, body: """{
     "product_id": "$productId",
-    "datasetSize": 20,
+    "datasetSize": 100,
     "filters": [$filtersString]
     }""" , headers: headers);
 
@@ -90,7 +90,7 @@ class BackendConnector {
     http.post(uri, body: """{
     "product_id": "$productId",
     "prompt": "Create a review based off of the inputs. ${prompt()} Keep the review to one paragraph.",
-    "datasetSize": 20,
+    "datasetSize": 80,
     "parameters": {
          "temperature": 0.2,
          "maxOutputTokens": 400,
