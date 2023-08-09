@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/models/filter_info.dart';
 import 'package:innove_gen_ai_frontend/models/user_info.dart';
@@ -25,7 +27,17 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   late String authToken;
   late final TabController _tabBarController;
 
-  List<String> convertToList(String input) => input.replaceAll("[", "").replaceAll("]","").replaceAll("\\", "").split(",").map((e) => e.trim()).map((e) => e.substring(1, e.length - 1)).toList();
+  List<String> convertToList(String input) {
+    if(input.isEmpty){
+      return List.empty();
+    } else {
+      return input.replaceAll("[", "").replaceAll("]","").replaceAll("\\", "").split(",").map(
+              (e) => e.trim()
+      ).map(
+              (e) => e.replaceAll("'", "")
+      ).toList();
+    }
+  }
 
   Future<Prediction> retrieveReview(List<FilterOptions> filters) async {
     product =
@@ -63,10 +75,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   }
 
   String sentimentCalculation(List<String> input) {
+    int neutral = (input.where((element) => element.contains("neutral")).toList()).length;
     int positive = (input.where((element) => element.contains("positive")).toList()).length;
     int negative = (input.where((element) => element.contains("negative")).toList()).length;
-    int totalCount = positive + negative;
-    double calculation = ((positive - negative) / totalCount) * 100;
+    int totalCount = positive + negative + neutral;
+    double calculation = ((positive + (neutral / 2)) / totalCount) * 100;
     double checkCalculation = calculation < 0 ? 0.00 : calculation;
     return checkCalculation.toStringAsFixed(2);
   }
@@ -103,7 +116,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
             ),
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 12), //const EdgeInsets.all(24),
             height: 650,
             width: 325,
             child: Column(
@@ -187,13 +200,16 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                           child: Wrap(
                             children: keywords.map((e) => Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                              child: Chip(label: Text(e)),
+                              child: Chip(label: Text(e,
+                                  style: const TextStyle(color: Colors.black, fontSize: 14)
+                              )),
                             )).toList(),
                           ),
                         ),
-                        const SizedBox(height: 3.0),
+                        const SizedBox(height: 9.0),
+                        Center(child: Text('Sentiment Score', style: prettifyText(Theme.of(context).textTheme.titleLarge!))),
                       SfRadialGauge(
-                        enableLoadingAnimation: true, title: GaugeTitle(text: 'Sentiment Score', textStyle: prettifyText(Theme.of(context).textTheme.titleLarge!)),
+                        enableLoadingAnimation: true, title: GaugeTitle(text: 'Based on 100 product reviews', textStyle: prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey)),
                           axes: <RadialAxis>[
                             RadialAxis(minimum: 0, maximum: 100.000001, startAngle: 180, endAngle: 0, ticksPosition: ElementsPosition.outside, labelsPosition: ElementsPosition.outside,
                                 ranges: <GaugeRange>[
@@ -240,6 +256,9 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
 
   @override
   Widget build(BuildContext context) {
+
+    String start = DateTime.now().toIso8601String();
+
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
@@ -254,6 +273,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                   product,
                   "Generating AI review sentiment..",List.empty(), List.empty());
             }
+
+            print(start);
+            print(DateTime.now().toIso8601String());
+
             return getMainBody(
                 Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -265,6 +288,12 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              Text(
+                                "Summarised from 80 product reviews",
+                                style:
+                                prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey),
+                              ),
+                              const SizedBox(height: 8),
                               Image.network(
                                 product.image,
                                 height: 180,
