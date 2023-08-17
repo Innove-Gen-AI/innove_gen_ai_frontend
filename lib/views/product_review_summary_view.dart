@@ -209,7 +209,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                         const SizedBox(height: 9.0),
                         Center(child: Text('Sentiment Score', style: prettifyText(Theme.of(context).textTheme.titleLarge!))),
                       SfRadialGauge(
-                        enableLoadingAnimation: true, title: GaugeTitle(text: 'Based on 100 product reviews', textStyle: prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey)),
+                        enableLoadingAnimation: true, title: GaugeTitle(text: 'Based on 80 product reviews', textStyle: prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey)),
                           axes: <RadialAxis>[
                             RadialAxis(minimum: 0, maximum: 100.000001, startAngle: 180, endAngle: 0, ticksPosition: ElementsPosition.outside, labelsPosition: ElementsPosition.outside,
                                 ranges: <GaugeRange>[
