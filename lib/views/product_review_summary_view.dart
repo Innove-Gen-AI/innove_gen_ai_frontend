@@ -13,6 +13,14 @@ import '../models/SentimentAnalysisResponse.dart';
 import '../models/products_info.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import 'package:flutter/foundation.dart';
+
+// ignore: avoid_web_libraries_in_flutter
+import 'package:universal_html/html.dart' show ImageElement;
+
+import 'package:innove_gen_ai_frontend/views/web/platform_view_registry.dart';
+
+
 class ProductSummary extends StatefulWidget {
   const ProductSummary({Key? key}) : super(key: key);
 
@@ -26,6 +34,20 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   late Product product;
   late String authToken;
   late final TabController _tabBarController;
+
+  double viewWidth() {
+    double defaultWidth = 325;
+    if(kIsWeb){
+      double width = MediaQuery.of(context).size.width / 3;
+      if(width <= defaultWidth){
+        return defaultWidth;
+      } else {
+        return width;
+      }
+    } else {
+      return defaultWidth;
+    }
+  }
 
   List<String> convertToList(String input) {
     if(input.isEmpty){
@@ -96,19 +118,60 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     super.dispose();
   }
 
+  double keywordsPadding(bool isWeb, {bool vertical = false}){
+    if(isWeb){
+      if(vertical){
+        return 5;
+      } else {
+        return 8;
+      }
+    } else {
+      if(vertical){
+        return 0;
+      } else {
+        return 2;
+      }
+    }
+  }
+
+  double webMultiplier(double value, { double multi = 2 }) {
+    if (kIsWeb) {
+      return value * multi;
+    } else {
+      return value;
+    }
+  }
+
+  double backArrowPadding() {
+    double defaultPadding = 30;
+    double width = MediaQuery.of(context).size.width;
+
+    double padding = (width - viewWidth()) / 2 - 40;
+    if(padding <= defaultPadding){
+      return defaultPadding;
+    } else {
+      return padding;
+    }
+  }
+
   Widget getMainBody(Widget child, BuildContext context, Product product, String title, List<String> sentimentAnalysis, List<String> keywords) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Align(
-            widthFactor: 7,
-            alignment: Alignment.bottomLeft,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back, color: Colors.grey),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: backArrowPadding()),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back, color: Colors.grey),
+                ),
+              ],
             ),
           ),
           Container(
@@ -118,7 +181,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
             ),
             padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 12), //const EdgeInsets.all(24),
             height: 650,
-            width: 325,
+            width: viewWidth(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,7 +248,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                               .textTheme
                               .titleLarge!),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
                         //replace with scrollable widget containing longer text
                         Expanded(child: child),
                       ],
@@ -195,18 +258,18 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                       children: [
                         const SizedBox(height: 16.0),
                         Center(child: Text('Keywords', style: prettifyText(Theme.of(context).textTheme.titleLarge!))),
-                        const SizedBox(height: 3.0),
+                        SizedBox(height: webMultiplier(3.0, multi: 4.0)),
                         Center(
                           child: Wrap(
                             children: keywords.map((e) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                              padding: EdgeInsets.symmetric(horizontal: keywordsPadding(kIsWeb), vertical: keywordsPadding(kIsWeb, vertical: true)),
                               child: Chip(label: Text(e,
                                   style: const TextStyle(color: Colors.black, fontSize: 14)
                               )),
                             )).toList(),
                           ),
                         ),
-                        const SizedBox(height: 9.0),
+                        SizedBox(height: webMultiplier(9.0, multi: 2.5)),
                         Center(child: Text('Sentiment Score', style: prettifyText(Theme.of(context).textTheme.titleLarge!))),
                       SfRadialGauge(
                         enableLoadingAnimation: true, title: GaugeTitle(text: 'Based on 80 product reviews', textStyle: prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey)),
@@ -254,6 +317,24 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     );
   }
 
+
+  Widget productImageCreation(String image){
+    if(kIsWeb){
+      return Center(
+          child: Container(
+              width: 180,
+              height: 180,
+              child: HtmlElementView(viewType: image)
+          )
+      );
+    } else {
+      return Image.network(
+        image,
+        height: 180,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -267,6 +348,17 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
             retrieveKeywords(Provider.of<FilterInfo>(context).getFilterOptions)]),
           builder: (BuildContext context, AsyncSnapshot<List<Prediction>> snapshot) {
             if (!snapshot.hasData) {
+
+              if(kIsWeb) {
+                // ignore: undefined_prefixed_name
+                platformViewRegistry.registerViewFactory(product.image, (int viewId) =>
+                ImageElement()
+                  ..style.height = 'auto'
+                  ..style.maxWidth = '180px'
+                  ..src = product.image
+                );
+              }
+
               return getMainBody(
                   const Center(child: CircularProgressIndicator()),
                   context,
@@ -294,10 +386,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                                 prettifyText(Theme.of(context).textTheme.titleSmall!).copyWith(color: Colors.grey),
                               ),
                               const SizedBox(height: 8),
-                              Image.network(
-                                product.image,
-                                height: 180,
-                              ),
+                              productImageCreation(product.image),
                               const SizedBox(height: 15),
                               Text(
                                 snapshot.data![0].content,

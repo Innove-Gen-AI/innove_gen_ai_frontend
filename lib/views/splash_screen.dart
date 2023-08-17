@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
-import 'package:innove_gen_ai_frontend/views/home.dart';
 import 'package:innove_gen_ai_frontend/views/login_view.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5)).then(
+    Future.delayed(const Duration(seconds: 1)).then(
       (value) => myFuture =
           Provider.of<ProductsInfo>(context, listen: false).populateList().then(
                 (value) => Navigator.pushReplacement(
