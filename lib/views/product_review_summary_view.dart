@@ -186,6 +186,14 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                    product.brandName,
+                    style: (Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium)?.copyWith(fontSize: 14),
+                ),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -193,10 +201,10 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                       flex: 9,
                       child: Text(
                         product.productName,
-                        style: Theme
+                        style: (Theme
                             .of(context)
                             .textTheme
-                            .titleLarge,
+                            .titleLarge)?.copyWith(fontSize: 19),
                       ),
                     ),
                     Expanded(
@@ -295,23 +303,40 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
             ),
           ),
           const SizedBox(height: 18),
-          FloatingActionButton(
-            elevation: 2,
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (context) => MyFilterCard(),
-              );
-            },
-            backgroundColor: Colors.lightBlueAccent.shade200,
-            child: const Icon(
-              Icons.tune,
-              weight: 20,
-              size: 36,
-              color: Colors.white,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton(
+                elevation: 2,
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => MyFilterCard(),
+                  );
+                },
+                backgroundColor: Colors.lightBlueAccent.shade200,
+                child: const Icon(
+                  Icons.tune,
+                  weight: 20,
+                  size: 36,
+                  color: Colors.white,
+                ),
+              ),
+              FloatingActionButton(
+                elevation: 2,
+                onPressed: () {},
+                backgroundColor: Colors.lightBlueAccent.shade200,
+                child: const Icon(
+                  Icons.shopping_cart_outlined,
+                  weight: 20,
+                  size: 36,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
+
         ],
       ),
     );
@@ -371,13 +396,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
 
             return getMainBody(
                 Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Flexible(
                         child: SingleChildScrollView(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
