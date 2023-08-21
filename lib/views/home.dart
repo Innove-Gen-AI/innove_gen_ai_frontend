@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_const
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:innove_gen_ai_frontend/connectors/backend_connector.dart';
@@ -46,8 +47,32 @@ class _HomeState extends State<Home> with DecorationUtil {
     super.dispose();
   }
 
+  double webMultiplier(double value, { double multi = 2 }) {
+    if (kIsWeb) {
+      return value * multi;
+    } else {
+      return value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    double margin() {
+      double defaultMargin = 24;
+      double defaultWidth = 550;
+      double width = MediaQuery.of(context).size.width;
+      if (kIsWeb) {
+        if(width <= defaultWidth){
+          return defaultMargin;
+        } else {
+          return (width - defaultWidth) / 5;
+        }
+      } else {
+        return defaultMargin;
+      }
+    }
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -58,7 +83,7 @@ class _HomeState extends State<Home> with DecorationUtil {
           // auto complete text search field
           Container(
             padding: const EdgeInsets.only(left: 40),
-            margin: const EdgeInsets.symmetric(horizontal: 24),
+            margin: EdgeInsets.symmetric(horizontal: margin()),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(36),

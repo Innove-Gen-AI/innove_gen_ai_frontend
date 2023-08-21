@@ -23,7 +23,7 @@ class BackendConnector {
     final response = await
     http.post(uri, body: """{
     "product_id": "$productId",
-    "datasetSize": 40,
+    "datasetSize": 30,
     "filters": [$filtersString]
     }""" , headers: headers);
 
@@ -55,7 +55,7 @@ class BackendConnector {
     final response = await
     http.post(uri, body: """{
     "product_id": "$productId",
-    "datasetSize": 100,
+    "datasetSize": 68,
     "filters": [$filtersString]
     }""" , headers: headers);
 
