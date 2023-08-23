@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1)).then(
+    Future.delayed(const Duration(seconds: 4)).then(
       (value) => myFuture =
           Provider.of<ProductsInfo>(context, listen: false).populateList().then(
                 (value) => Navigator.pushReplacement(

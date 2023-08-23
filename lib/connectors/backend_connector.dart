@@ -5,7 +5,7 @@ import 'package:innove_gen_ai_frontend/models/ProductResponse.dart';
 
 class BackendConnector {
 
-  final String _baseUrl = "http://localhost:10041";
+  final String _baseUrl = "https://innove-gen.duckdns.org";
   final String _keywordsRoute = 'keywords';
   final String _sentimentAnalysisRoute = 'sentiment-analysis';
   final String _freeFormRoute = 'freeform';
@@ -28,9 +28,10 @@ class BackendConnector {
     }""" , headers: headers);
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("Keywords success code = ${response.statusCode}");
       return Prediction.fromJson(jsonDecode(response.body));
     } else {
+      print("Keywords error code = ${response.statusCode}");
       throw Exception('Failed to load data');
     }
   }
@@ -60,9 +61,10 @@ class BackendConnector {
     }""" , headers: headers);
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("Sentiment success code = ${response.statusCode}");
       return Prediction.fromJson(jsonDecode(response.body));
     } else {
+      print("Sentiment error code = ${response.statusCode}");
       throw Exception('Failed to load data');
     }
   }
@@ -102,9 +104,10 @@ class BackendConnector {
 
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("Review success code = ${response.statusCode}");
       return Prediction.fromJson(jsonDecode(response.body));
     } else {
+      print("Review error code = ${response.statusCode}");
       throw Exception('Failed to load data');
     }
   }
@@ -115,10 +118,11 @@ class BackendConnector {
     final response = await http.get(uri);
 
     if(response.statusCode == 200) {
-      print(response.body);
+      print("Products success code = ${response.statusCode}");
       final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((json) => Product.fromJson(json)).toList();
     } else {
+      print("Products error code = ${response.statusCode}");
       throw Exception('Failed to load data');
     }
 
