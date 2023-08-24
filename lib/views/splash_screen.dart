@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
 
   var myFuture;
 
-  int delay = 1;
+  int delay = 4;
 
   @override
   void initState() {
