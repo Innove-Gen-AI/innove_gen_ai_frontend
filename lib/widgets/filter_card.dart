@@ -30,21 +30,31 @@ class _MyFilterCardState extends State<MyFilterCard> with DecorationUtil {
   }
 
   double padding() {
+
     double defaultMargin = 0;
     double defaultWidth = 550;
     double width = MediaQuery.of(context).size.width;
-    print("media query width = $width");
-    if (kIsWeb) {
-      if(width <= defaultWidth){
-        return defaultMargin;
+
+    double paddingToUse() {
+      if (kIsWeb) {
+        if(width <= defaultWidth){
+          return defaultMargin;
+        } else {
+          double paddingToUse = (width - defaultWidth) / 4;
+          if(paddingToUse > 100){
+            return 100;
+          } else {
+            return paddingToUse;
+          }
+        }
       } else {
-        double paddingToUse = (width - defaultWidth) / 4;
-        print("paddingToUse = $paddingToUse");
-        return paddingToUse;
+        return defaultMargin;
       }
-    } else {
-      return defaultMargin;
     }
+
+    double paddingToReturn = paddingToUse();
+    print("padding to apply = $paddingToReturn");
+    return paddingToReturn;
   }
 
   @override
