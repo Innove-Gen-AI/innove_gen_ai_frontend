@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/models/filter_info.dart';
-import 'package:innove_gen_ai_frontend/models/user_info.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
 import 'package:innove_gen_ai_frontend/widgets/filter_card.dart';
 import 'package:provider/provider.dart';
@@ -61,39 +60,17 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     }
   }
 
-  Future<Prediction> retrieveReview(List<FilterOptions> filters) async {
-    product =
-        Provider
-            .of<ProductsInfo>(context, listen: false)
-            .getSingleProduct;
-    authToken = Provider
-        .of<UserInfo>(context, listen: false)
-        .getAuthValue;
-
-    return backendConnector.callFreeForm(product.productId, authToken, filters.map((e) => e.name).toList());
+  Future<Prediction> retrieveReview(List<FilterOptions> filters, Product product) async {
+    return backendConnector.callFreeForm(product.productId, filters.map((e) => e.name).toList());
   }
 
-  Future<Prediction> retrieveSentimentAnalysis(List<FilterOptions> filters) async {
-    product =
-        Provider
-            .of<ProductsInfo>(context, listen: false)
-            .getSingleProduct;
-    authToken = Provider
-        .of<UserInfo>(context, listen: false)
-        .getAuthValue;
-    return backendConnector.callSentimentAnalysis(product.productId, authToken, filters.map((e) => e.name).toList());
+  Future<Prediction> retrieveSentimentAnalysis(List<FilterOptions> filters, Product product) async {
+    return backendConnector.callSentimentAnalysis(product.productId, filters.map((e) => e.name).toList());
   }
 
-  Future<Prediction> retrieveKeywords(List<FilterOptions> filters) async {
-    product =
-        Provider
-            .of<ProductsInfo>(context, listen: false)
-            .getSingleProduct;
-    authToken = Provider
-        .of<UserInfo>(context, listen: false)
-        .getAuthValue;
+  Future<Prediction> retrieveKeywords(List<FilterOptions> filters, Product product) async {
     return backendConnector.callKeywords(
-        product.productId, authToken, filters.map((e) => e.name).toList());
+        product.productId, filters.map((e) => e.name).toList());
   }
 
   String sentimentCalculation(List<String> input) {
@@ -106,10 +83,31 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     return checkCalculation.toStringAsFixed(2);
   }
 
+  late Future<List<Prediction>> predictionsFuture;
+
+  Future<List<Prediction>> _getData() async {
+
+    final filterOptions = Provider.of<FilterInfo>(context, listen: false).getFilterOptions;
+
+    final reviewFuture = retrieveReview(filterOptions, product);
+    final sentimentAnalysisFuture = retrieveSentimentAnalysis(filterOptions, product);
+    final keywordsFuture = retrieveKeywords(filterOptions, product);
+
+    final List<Prediction> predictions = await Future.wait([
+      reviewFuture,
+      sentimentAnalysisFuture,
+      keywordsFuture,
+    ]);
+
+    return predictions;
+  }
+
   @override
   void initState() {
     super.initState();
     _tabBarController = TabController(length: 2, vsync: this);
+    product = Provider.of<ProductsInfo>(context, listen: false).getSingleProduct;
+    predictionsFuture = _getData();
   }
 
   @override
@@ -307,6 +305,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton(
+                heroTag: "filterButton",
                 elevation: 2,
                 onPressed: () {
                   showModalBottomSheet(
@@ -324,6 +323,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                 ),
               ),
               FloatingActionButton(
+                heroTag: "buyButton",
                 elevation: 2,
                 onPressed: () {},
                 backgroundColor: Colors.lightBlueAccent.shade200,
@@ -341,7 +341,6 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
       ),
     );
   }
-
 
   Widget productImageCreation(String image){
     if(kIsWeb){
@@ -363,14 +362,12 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
   @override
   Widget build(BuildContext context) {
 
-    String start = DateTime.now().toIso8601String();
+    DateTime start = DateTime.now();
 
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: Future.wait([retrieveReview(Provider.of<FilterInfo>(context).getFilterOptions),
-            retrieveSentimentAnalysis(Provider.of<FilterInfo>(context).getFilterOptions),
-            retrieveKeywords(Provider.of<FilterInfo>(context).getFilterOptions)]),
+          future: predictionsFuture,
           builder: (BuildContext context, AsyncSnapshot<List<Prediction>> snapshot) {
             if (!snapshot.hasData) {
 
@@ -391,8 +388,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                   "Generating AI review sentiment..",List.empty(), List.empty());
             }
 
-            print(start);
-            print(DateTime.now().toIso8601String());
+            DateTime now = DateTime.now();
+
+            if(now.difference(start).inMilliseconds > 500){
+              print("proper Built duration = ${now.difference(start)}");
+            }
 
             return getMainBody(
                 Column(

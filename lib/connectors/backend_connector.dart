@@ -5,16 +5,18 @@ import 'package:innove_gen_ai_frontend/models/ProductResponse.dart';
 
 class BackendConnector {
 
+  // final String _baseUrl = "http://localhost:1000";
   final String _baseUrl = "https://innove-gen.duckdns.org";
+
   final String _keywordsRoute = 'keywords';
   final String _sentimentAnalysisRoute = 'sentiment-analysis';
   final String _freeFormRoute = 'freeform';
   final String _productsRoute = 'products';
 
-  Future<Prediction> callKeywords(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callKeywords(String productId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_keywordsRoute");
     final Map<String, String> headers = {
-      'Authorization': 'Bearer $bearerToken',
+      'Authorization': 'Bearer token',
       'Content-Type': 'application/json',
     };
 
@@ -44,10 +46,10 @@ class BackendConnector {
     }
   }
 
-  Future<Prediction> callSentimentAnalysis(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callSentimentAnalysis(String productId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_sentimentAnalysisRoute");
     final Map<String, String> headers = {
-      'Authorization': 'Bearer $bearerToken',
+      'Authorization': 'Bearer token',
       'Content-Type': 'application/json',
     };
 
@@ -69,10 +71,10 @@ class BackendConnector {
     }
   }
 
-  Future<Prediction> callFreeForm(String productId, String bearerToken, List<String> filters) async {
+  Future<Prediction> callFreeForm(String productId, List<String> filters) async {
     var uri = Uri.parse("$_baseUrl/$_freeFormRoute");
     final Map<String, String> headers = {
-      'Authorization': 'Bearer $bearerToken',
+      'Authorization': 'Bearer token',
       'Content-Type': 'application/json',
     };
 
