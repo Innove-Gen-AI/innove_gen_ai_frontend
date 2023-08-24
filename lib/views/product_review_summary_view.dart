@@ -18,7 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:universal_html/html.dart' show ImageElement;
 
 import 'package:innove_gen_ai_frontend/views/web/platform_view_registry.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductSummary extends StatefulWidget {
   const ProductSummary({Key? key}) : super(key: key);
@@ -149,6 +149,19 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
       return defaultPadding;
     } else {
       return padding;
+    }
+  }
+
+  void _launchURL() async {
+
+    final Uri uri = Uri.parse('https://www.google.com/search?q=${product.brandName} ${product.productName}&tbm=shop');
+
+    print("clicked link - $uri");
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
     }
   }
 
@@ -325,7 +338,28 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
               FloatingActionButton(
                 heroTag: "buyButton",
                 elevation: 2,
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.shopping_cart_outlined),
+                            title: Text('Buy Now'),
+                            onTap: _launchURL,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
                 backgroundColor: Colors.lightBlueAccent.shade200,
                 child: const Icon(
                   Icons.shopping_cart_outlined,

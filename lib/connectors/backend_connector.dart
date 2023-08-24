@@ -5,8 +5,8 @@ import 'package:innove_gen_ai_frontend/models/ProductResponse.dart';
 
 class BackendConnector {
 
-  // final String _baseUrl = "http://localhost:1000";
-  final String _baseUrl = "https://innove-gen.duckdns.org";
+  final String _baseUrl = "http://localhost:1000";
+  // final String _baseUrl = "https://innove-gen.duckdns.org";
 
   final String _keywordsRoute = 'keywords';
   final String _sentimentAnalysisRoute = 'sentiment-analysis';
