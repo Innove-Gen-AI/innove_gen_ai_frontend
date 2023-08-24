@@ -33,11 +33,14 @@ class _MyFilterCardState extends State<MyFilterCard> with DecorationUtil {
     double defaultMargin = 0;
     double defaultWidth = 550;
     double width = MediaQuery.of(context).size.width;
+    print("media query width = $width");
     if (kIsWeb) {
       if(width <= defaultWidth){
         return defaultMargin;
       } else {
-        return (width - defaultWidth) / 2.5;
+        double paddingToUse = (width - defaultWidth) / 4;
+        print("paddingToUse = $paddingToUse");
+        return paddingToUse;
       }
     } else {
       return defaultMargin;

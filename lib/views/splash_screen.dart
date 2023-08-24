@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
-import 'package:innove_gen_ai_frontend/views/login_view.dart';
+import 'package:innove_gen_ai_frontend/views/home.dart';
 import 'package:provider/provider.dart';
-
-import '../connectors/backend_connector.dart';
-import '../models/ProductResponse.dart';
 import '../models/products_info.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,27 +14,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
-  BackendConnector backendConnector = BackendConnector();
-
-  Future<List<Product>> getProducts() {
-    return backendConnector.callProducts();
-  }
 
   var myFuture;
+
+  int delay = 4;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4)).then(
-      (value) => myFuture =
-          Provider.of<ProductsInfo>(context, listen: false).populateList().then(
-                (value) => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => withScreenDecoration(const Login()),
-                  ),
-                ),
-              ),
+    myFuture = Provider.of<ProductsInfo>(context, listen: false).populateList().then((value) =>
+        Future.delayed(Duration(seconds: delay)).then((value) =>
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => withScreenDecoration(const Home()),
+            ),
+          ),
+        )
     );
   }
 
@@ -46,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> with DecorationUtil {
     return Scaffold(
       body: FutureBuilder(
         future: myFuture,
-        builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

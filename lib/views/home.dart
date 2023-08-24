@@ -3,7 +3,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_autocomplete/easy_autocomplete.dart';
-import 'package:innove_gen_ai_frontend/connectors/backend_connector.dart';
 import 'package:innove_gen_ai_frontend/models/ProductResponse.dart';
 import 'package:innove_gen_ai_frontend/models/products_info.dart';
 import 'package:innove_gen_ai_frontend/util/decoration_util.dart';
