@@ -18,7 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:universal_html/html.dart' show ImageElement;
 
 import 'package:innove_gen_ai_frontend/views/web/platform_view_registry.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 
 class ProductSummary extends StatefulWidget {
   const ProductSummary({Key? key}) : super(key: key);
@@ -158,11 +158,11 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
 
     print("clicked link - $uri");
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $uri';
-    }
+    // if (await canLaunchUrl(uri)) {
+    //   await launchUrl(uri);
+    // } else {
+    //   throw 'Could not launch $uri';
+    // }
   }
 
   Widget getMainBody(Widget child, BuildContext context, Product product, String title, List<String> sentimentAnalysis, List<String> keywords) {
