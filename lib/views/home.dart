@@ -26,6 +26,10 @@ class _HomeState extends State<Home> with DecorationUtil {
   }
 
   void handleOnSubmit(Product p) {
+
+    isDropdownOpen = false;
+    filteredProducts = [];
+
     Provider.of<ProductsInfo>(context, listen: false).foundProduct(p);
     Navigator.push(
       context,
@@ -35,9 +39,19 @@ class _HomeState extends State<Home> with DecorationUtil {
     );
   }
 
+  late List<Product> listOfProducts;
+  late List<Product> filteredProducts;
+
+  bool isDropdownOpen = false; // Track if the dropdown is open
+
   @override
   void initState() {
     super.initState();
+    // Retrieve the initial list of products from the ProductsInfo consumer
+    listOfProducts = Provider.of<ProductsInfo>(context, listen: false).getProducts;
+
+    // Initialize filteredProducts with the same list initially
+    filteredProducts = [];
   }
 
   @override
@@ -51,6 +65,18 @@ class _HomeState extends State<Home> with DecorationUtil {
       return value * multi;
     } else {
       return value;
+    }
+  }
+
+  double filteredProductsDropdownSize() {
+    if(filteredProducts.length >= 4){
+      return 200;
+    } else {
+      if(filteredProducts.isEmpty){
+        return 15;
+      } else {
+        return 50 * filteredProducts.length.toDouble();
+      }
     }
   }
 
@@ -94,52 +120,93 @@ class _HomeState extends State<Home> with DecorationUtil {
                 ]),
             child: Consumer<ProductsInfo>(
               builder: (context, products, child) {
-                var listOfProducts = products.getProducts;
+                listOfProducts = products.getProducts;
 
-                return EasyAutocomplete(
-                  controller: _controller,
-                  suggestions:
-                      listOfProducts.map((e) => e.productName).toList(),
-                  suggestionBackgroundColor: Colors.white,
-                  onSubmitted: (value) =>
-                      handleOnSubmit(fetchProduct(listOfProducts)),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'Search anything...',
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
+                if(!kIsWeb){
+                  return EasyAutocomplete(
+                    controller: _controller,
+                    suggestions:
+                    listOfProducts.map((e) => e.productName).toList(),
+                    suggestionBackgroundColor: Colors.white,
+                    onSubmitted: (value) => {
+                      handleOnSubmit(fetchProduct(listOfProducts))
+                    },
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Search anything...',
+                      suffixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      EasyAutocomplete(
+                        controller: _controller,
+                        suggestions: List.empty(),
+                        suggestionBackgroundColor: Colors.white,
+                        onChanged: (value) {
+                          // Update the list of filtered products based on the input value
+                          setState(() {
+                            isDropdownOpen = true;
+                            filteredProducts = listOfProducts.where((product) {
+                              return product.productName.toLowerCase().contains(value.toLowerCase());
+                            }).toList();
+                          });
+                        },
+                        onSubmitted: (value) =>
+                            handleOnSubmit(fetchProduct(listOfProducts)),
+                        focusNode: FocusNode()..addListener(() {
+
+                          var focus = FocusScope.of(context);
+
+                          if(focus.hasFocus){
+                            setState(() {
+                              isDropdownOpen = true;
+                              filteredProducts = listOfProducts.where((product) {
+                                return product.productName.toLowerCase().contains(_controller.text.toLowerCase());
+                              }).toList();
+                            });
+                          } else {
+                              setState(() {
+                                isDropdownOpen = false;
+                                filteredProducts = [];
+                              });
+                            }
+                          }),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Search anything...',
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: filteredProductsDropdownSize(),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: filteredProducts.map((product) {
+                              return ListTile(
+                                title: Text(product.productName),
+                                onTap: () {
+                                  _controller.text = product.productName;
+                                  handleOnSubmit(fetchProduct(filteredProducts));
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
               },
             ),
           ),
-
-          // standard text search field
-          // Container(
-          //   padding: const EdgeInsets.only(left: 56),
-          //   decoration: BoxDecoration(
-          //       color: Colors.white,
-          //       borderRadius: BorderRadius.circular(24),
-          //       boxShadow: const [
-          //         BoxShadow(
-          //             offset: Offset(0, 4),
-          //             color: Colors.black26,
-          //             blurRadius: 2)
-          //       ]),
-          //   child: TextField(
-          //     controller: _controller,
-          //     decoration: const InputDecoration(
-          //       border: InputBorder.none,
-          //       labelText: 'Search anything...',
-          //       suffixIcon: Icon(
-          //         Icons.search,
-          //         color: Colors.grey,
-          //       ),
-          //     ),
-          //   ),
-          // ),
 
           const SizedBox(
             height: 120,

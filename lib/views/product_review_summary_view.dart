@@ -19,7 +19,6 @@ import 'package:universal_html/html.dart' show ImageElement;
 
 import 'package:innove_gen_ai_frontend/views/web/platform_view_registry.dart';
 
-
 class ProductSummary extends StatefulWidget {
   const ProductSummary({Key? key}) : super(key: key);
 
@@ -311,7 +310,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
-                    builder: (context) => MyFilterCard(),
+                    builder: (context) => MyFilterCard(buy: false),
                   );
                 },
                 backgroundColor: Colors.lightBlueAccent.shade200,
@@ -325,7 +324,13 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
               FloatingActionButton(
                 heroTag: "buyButton",
                 elevation: 2,
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => MyFilterCard(buy: true, search: "${product.brandName} ${product.productName}",),
+                  );
+                },
                 backgroundColor: Colors.lightBlueAccent.shade200,
                 child: const Icon(
                   Icons.shopping_cart_outlined,
