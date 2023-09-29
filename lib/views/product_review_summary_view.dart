@@ -151,6 +151,20 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
     }
   }
 
+  double heightOfMainBox(){
+    double height = MediaQuery.of(context).size.height;
+    var padding = MediaQuery.of(context).padding;
+    double newheight = height - padding.top - padding.bottom;
+
+    var heightToUse = newheight * 0.7;
+
+    if(heightToUse == 750){
+       return 750;
+    } else {
+      return heightToUse;
+    }
+  }
+
   Widget getMainBody(Widget child, BuildContext context, Product product, String title, List<String> sentimentAnalysis, List<String> keywords) {
     return Center(
       child: Column(
@@ -177,7 +191,7 @@ class _ProductSummaryState extends State<ProductSummary> with DecorationUtil, Ti
               borderRadius: BorderRadius.circular(24),
             ),
             padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 12), //const EdgeInsets.all(24),
-            height: 650,
+            height: heightOfMainBox(),
             width: viewWidth(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
